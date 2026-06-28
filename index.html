@@ -54,6 +54,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 12px;
         }
 
         h1, h2 {
@@ -78,6 +79,42 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 12px;
+        }
+
+        /* Панель вкладок (Табы) */
+        .tab-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-bottom: 16px;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .tab-bar::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .tab-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #fff;
+            border-color: transparent;
+            opacity: 1;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
         }
 
         .input-group {
@@ -155,7 +192,7 @@
             line-height: 1.6;
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -179,18 +216,35 @@
 
     <div id="main-content" class="hidden">
 
-        <div class="glass-card">
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('tab-dd', this)">Калькулятор ДД</button>
+            <button class="tab-btn" onclick="switchTab('tab-fizo', this)">ФИЗО</button>
+            <button class="tab-btn" onclick="switchTab('tab-vysluga', this)">Выслуга</button>
+            <button class="tab-btn" onclick="switchTab('tab-notes', this)">Заметки</button>
+            <button class="tab-btn" onclick="switchTab('tab-feedback', this)">Обратная связь</button>
+        </div>
+
+        <div id="tab-dd" class="tab-content glass-card">
             <h2>Калькулятор ДД (Минобороны)</h2>
             
             <div class="input-group">
                 <label>Воинское звание</label>
                 <select id="dd-zv" class="input-control">
-                    <option value="12450">Прапорщик / Мичман</option>
+                    <option value="6420">Рядовой / Матрос</option>
+                    <option value="6960">Ефрейтор / Старший матрос</option>
+                    <option value="7490">Младший сержант / Старшина 2 статьи</option>
+                    <option value="8030">Сержант / Старшина 1 статьи</option>
+                    <option value="8560">Старший сержант / Главный старшина</option>
+                    <option value="9100">Старшина / Главный корабельный старшина</option>
+                    <option value="12450" selected>Прапорщик / Мичман</option>
                     <option value="13530">Старший прапорщик / Старший мичман</option>
+                    <option value="14070">Младший лейтенант</option>
                     <option value="14610">Лейтенант</option>
                     <option value="15690">Старший лейтенант</option>
                     <option value="16770">Капитан / Капитан-лейтенант</option>
                     <option value="17850">Майор / Капитан 3 ранга</option>
+                    <option value="18930">Подполковник / Капитан 2 ранга</option>
+                    <option value="20010">Полковник / Капитан 1 ранга</option>
                 </select>
             </div>
 
@@ -267,7 +321,7 @@
             <div id="dd-result" class="result-box">Нажмите кнопку для расчета.</div>
         </div>
 
-        <div class="glass-card">
+        <div id="tab-fizo" class="tab-content glass-card hidden">
             <h2>Калькулятор ФИЗО</h2>
             <div class="input-group">
                 <label>Баллы за 1-е упражнение</label>
@@ -285,7 +339,17 @@
             <div id="fizo-result" class="result-box"></div>
         </div>
 
-        <div class="glass-card">
+        <div id="tab-vysluga" class="tab-content glass-card hidden">
+            <h2>Расчет выслуги лет</h2>
+            <div class="input-group">
+                <label>Дата начала службы</label>
+                <input type="date" id="vysl-start" class="input-control">
+            </div>
+            <button class="btn" onclick="calcVysluga()">Рассчитать выслугу</button>
+            <div id="vysl-result" class="result-box"></div>
+        </div>
+
+        <div id="tab-notes" class="tab-content glass-card hidden">
             <h2>Календарь и пометки</h2>
             <div class="input-group">
                 <label>Выберите дату</label>
@@ -300,17 +364,7 @@
             <div id="cal-result" class="result-box"></div>
         </div>
 
-        <div class="glass-card">
-            <h2>Расчет выслуги лет</h2>
-            <div class="input-group">
-                <label>Дата начала службы</label>
-                <input type="date" id="vysl-start" class="input-control">
-            </div>
-            <button class="btn" onclick="calcVysluga()">Рассчитать выслугу</button>
-            <div id="vysl-result" class="result-box"></div>
-        </div>
-
-        <div class="glass-card">
+        <div id="tab-feedback" class="tab-content glass-card hidden">
             <h2>Обратная связь</h2>
             <div class="input-group">
                 <label>ФИО кандидата / Текст обращения</label>
@@ -318,10 +372,8 @@
             </div>
             <button class="btn" onclick="sendMail('Жалоба')">Отправить жалобу</button>
             <button class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="sendMail('Анкета кандидата')">Отправить анкету</button>
-        </div>
-
-        <div class="glass-card">
-            <h2>Официальные ресурсы</h2>
+            
+            <h2 style="margin-top: 24px;">Официальные ресурсы</h2>
             <a href="https://vk.ru/12mil" class="btn-link" target="_blank">Перейти в VK</a>
             <a href="https://max.ru/sila" class="btn-link" target="_blank">Перейти в MAX</a>
             <a href="https://mil.ru/service/contract12" class="btn-link" target="_blank">Сайт (Служба по контракту)</a>
@@ -344,15 +396,27 @@
             }
         }
 
-        // Новая точная логика расчета ДД
+        // Логика переключения табов
+        function switchTab(tabId, element) {
+            // Скрываем все вкладки
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.add('hidden'));
+            
+            // Убираем активный класс у кнопок
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Показываем целевую вкладку и активируем кнопку
+            document.getElementById(tabId).classList.remove('hidden');
+            element.classList.add('active');
+        }
+
         function calcDD() {
             const zvOklad = parseFloat(document.getElementById('dd-zv').value) || 0;
             const dolzhOklad = parseFloat(document.getElementById('dd-dolzh').value) || 0;
             
-            // Оклад денежного содержания (ОДС)
             const ods = zvOklad + dolzhOklad;
             
-            // Процент надбавки за выслугу лет
             const years = parseInt(document.getElementById('dd-vysl-years').value) || 0;
             let vyslPct = 0;
             if (years >= 2 && years < 5) vyslPct = 10;
@@ -363,32 +427,25 @@
             else if (years >= 25) vyslPct = 40;
             
             const vyslBonus = ods * (vyslPct / 100);
-            
-            // Ежемесячная премия (25% от ОДС)
             const emoBonus = document.getElementById('dd-emo').checked ? (ods * 0.25) : 0;
             
-            // Секретность (% от оклада по должности)
             const secretPct = parseFloat(document.getElementById('dd-secret').value) || 0;
             const secretBonus = dolzhOklad * (secretPct / 100);
             
-            // Москва и МО (50% от оклада по должности)
             const moscowBonus = document.getElementById('dd-moscow').checked ? (dolzhOklad * 0.50) : 0;
             
-            // Особые достижения (Доблесть, медали, особые условия службы)
             let achievements = 0;
             if (document.getElementById('dd-doblest').checked) achievements += (dolzhOklad * 0.20);
             if (document.getElementById('dd-medal5').checked) achievements += (dolzhOklad * 0.10);
             if (document.getElementById('dd-nous').checked) achievements += (dolzhOklad * 0.30);
             
-            // Суммируем промежуточный итог перед коэффициентами
             let subTotal = ods + vyslBonus + emoBonus + secretBonus + moscowBonus + achievements;
             
-            // Районный коэффициент и Северная надбавка
             const rayCoef = parseFloat(document.getElementById('dd-rayon').value) || 1.0;
             const severPct = parseFloat(document.getElementById('dd-sever').value) || 0;
             
             let totalGross = (subTotal * rayCoef) + (ods * (severPct / 100));
-            let totalNet = totalGross * 0.87; // Вычет НДФЛ 13%
+            let totalNet = totalGross * 0.87; 
             
             document.getElementById('dd-result').innerHTML = `
                 <span style="color:var(--text-color);">Начислено (грязными): <strong>${totalGross.toFixed(0)} руб.</strong></span><br>
@@ -452,3 +509,4 @@
     </script>
 </body>
 </html>
+ 
