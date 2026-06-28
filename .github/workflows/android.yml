@@ -1,47 +1,133 @@
-name: Build Android APK
-
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
-
+name: Cloud Compile APK
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Source Code
+      - name: Checkout Code
         uses: actions/checkout@v4
-
+          
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
           java-version: '17'
+          distribution: 'temurin'
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Initialize Project & Capacitor
+      - name: Auto-Generate Android Project Structure
         run: |
-          mkdir www
-          cp index.html www/
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Служебный Монитор" "com.roman.monitor" --web-dir=www
-          npx cap add android
-          npx cap sync
+          echo "=== Создание чистой структуры ==="
+          mkdir -p app/src/main/java/com/glavk/app
+          mkdir -p app/src/main/assets
+          
+          # Копируем твой index.html из корня в папку assets приложения
+          cp index.html app/src/main/assets/index.html
+          
+          # Настройки проекта
+          cat << 'EOF' > settings.gradle
+          rootProject.name = "GlavkApp"
+          include ':app'
+          EOF
+          
+          # Главный билд-файл
+          cat << 'EOF' > build.gradle
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.2.2' }
+          }
+          allprojects {
+              repositories { google(); mavenCentral() }
+          }
+          EOF
+          
+          # Билд-файл самого приложения
+          cat << 'EOF' > app/build.gradle
+          apply plugin: 'com.android.application'
+          android {
+              compileSdk 34
+              namespace 'com.glavk.app'
+              defaultConfig {
+                  applicationId "com.glavk.app"
+                  minSdk 21
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+          }
+          EOF
+          
+          # Манифест приложения
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <application android:label="12 Главк" android:allowBackup="true" android:supportsRtl="true">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+          
+          # Java-код с премиум-мостом
+          cat << 'EOF' > app/src/main/java/com/glavk/app/MainActivity.java
+          package com.glavk.app;
+          import android.app.Activity;
+          import android.content.Context;
+          import android.os.Bundle;
+          import android.view.Window;
+          import android.view.WindowManager;
+          import android.webkit.JavascriptInterface;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.view.ViewGroup;
+          import android.widget.LinearLayout;
+          import android.widget.Toast;
+          public class MainActivity extends Activity {
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  requestWindowFeature(Window.FEATURE_NO_TITLE);
+                  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                  LinearLayout layout = new LinearLayout(this);
+                  layout.setOrientation(LinearLayout.VERTICAL);
+                  layout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                  WebView webView = new WebView(this);
+                  webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                  WebSettings webSettings = webView.getSettings();
+                  webSettings.setJavaScriptEnabled(true);
+                  webSettings.setDomStorageEnabled(true);
+                  webSettings.setAllowFileAccess(true);
+                  webSettings.setAllowContentAccess(true);
+                  webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+                  webView.addJavascriptInterface(new WebAppInterface(this), "AndroidBridge");
+                  webView.setWebViewClient(new WebViewClient());
+                  webView.loadUrl("file:///android_asset/index.html");
+                  layout.addView(webView);
+                  setContentView(layout);
+              }
+              public class WebAppInterface {
+                  Context mContext;
+                  WebAppInterface(Context c) { mContext = c; }
+                  @JavascriptInterface
+                  public void showSystemToast(String message) {
+                      Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+                  }
+              }
+          }
+          EOF
 
-      - name: Compile APK via Gradle
+      - name: Build Application with Gradle
         run: |
-          cd android
+          gradle wrapper --gradle-version 8.2
           chmod +x gradlew
           ./gradlew assembleDebug
 
       - name: Upload Finished APK
         uses: actions/upload-artifact@v4
         with:
-          name: monitor-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: GlavkApp-Finished
+          path: app/build/outputs/apk/debug/app-debug.apk
