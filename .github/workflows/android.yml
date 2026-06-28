@@ -24,64 +24,77 @@ jobs:
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/mipmap
           
-          # Скрипт генерации тактической иконки: Золотой Двуглавый Орел на фоне цифры 12
+          # Скрипт генерации новой иконки: Величественный Золотой Двуглавый Орел
           cat << 'EOF' > generate_icon.py
           from PIL import Image, ImageDraw
 
-          # Создаем холст 512x512 (глубокий тактический фон)
-          img = Image.new('RGBA', (512, 512), '#030712')
+          # Роскошный глубокий фон (темно-синий тактический бархат)
+          img = Image.new('RGBA', (512, 512), '#020617')
           draw = ImageDraw.Draw(img)
 
-          # 1. ЗАДНИЙ ПЛАН: Массивная цифра "12" (темный контрастный цвет)
-          bg_digit = '#111827'
-          # Цифра 1
-          draw.rectangle([110, 100, 150, 412], fill=bg_digit)
-          draw.polygon([(70, 140), (110, 100), (110, 150)], fill=bg_digit)
-          # Цифра 2
-          draw.rectangle([210, 100, 390, 140], fill=bg_digit)
-          draw.rectangle([350, 140, 390, 260], fill=bg_digit)
-          draw.rectangle([210, 260, 390, 300], fill=bg_digit)
-          draw.rectangle([210, 300, 250, 380], fill=bg_digit)
-          draw.rectangle([210, 372, 390, 412], fill=bg_digit)
+          gold_light = '#fbbf24' # Яркое золото для бликов
+          gold_base  = '#d4af37' # Классическое геральдическое золото
+          gold_dark  = '#b45309' # Темное золото для контуров и объема
 
-          # Внешнее золотое защитное кольцо
-          gold = '#d4af37'
-          draw.ellipse([20, 20, 492, 492], outline=gold, width=4)
+          # Внешний премиальный золотой кант
+          draw.ellipse([15, 15, 497, 497], outline=gold_dark, width=6)
+          draw.ellipse([22, 22, 490, 490], outline=gold_base, width=3)
+          draw.ellipse([35, 35, 477, 477], outline=gold_light, width=1)
 
-          # 2. ПЕРЕДНИЙ ПЛАН: Золотистый Двуглавый Орел
-          # Центральный боевой щит на груди
-          draw.polygon([(220, 240), (292, 240), (292, 340), (256, 380), (220, 340)], fill='#0f172a', outline=gold, width=4)
+          # === ОТРИСОВКА ЗОЛОТОГО ДВУГЛАВОГО ОРЛА ===
+          
+          # 1. Хвост орла (нижняя часть)
+          draw.polygon([(230, 390), (256, 460), (282, 390)], fill=gold_base, outline=gold_dark, width=2)
+          draw.polygon([(210, 370), (225, 440), (245, 385)], fill=gold_base, outline=gold_dark, width=2)
+          draw.polygon([(302, 370), (287, 440), (267, 385)], fill=gold_base, outline=gold_dark, width=2)
 
-          # Левое крыло (мощные перья)
-          draw.polygon([(220, 220), (90, 140), (130, 260)], fill=gold)
-          draw.polygon([(220, 250), (70, 220), (110, 320)], fill=gold)
-          draw.polygon([(220, 280), (80, 300), (140, 370)], fill=gold)
+          # 2. Мощные крылья (левое и правое)
+          # Левое крыло (перья вверх и вбок)
+          draw.polygon([(220, 200), (60, 110), (120, 240)], fill=gold_base, outline=gold_dark, width=2)
+          draw.polygon([(220, 230), (40, 180), (100, 300)], fill=gold_light, outline=gold_dark, width=2)
+          draw.polygon([(220, 260), (50, 260), (120, 350)], fill=gold_base, outline=gold_dark, width=2)
+          draw.polygon([(220, 290), (80, 330), (150, 390)], fill=gold_dark, outline=gold_base, width=1)
 
           # Правое крыло (зеркальное отражение)
-          draw.polygon([(292, 220), (422, 140), (382, 260)], fill=gold)
-          draw.polygon([(292, 250), (442, 220), (402, 320)], fill=gold)
-          draw.polygon([(292, 280), (432, 300), (372, 370)], fill=gold)
+          draw.polygon([(292, 200), (452, 110), (392, 240)], fill=gold_base, outline=gold_dark, width=2)
+          draw.polygon([(292, 230), (472, 180), (412, 300)], fill=gold_light, outline=gold_dark, width=2)
+          draw.polygon([(292, 260), (462, 260), (392, 350)], fill=gold_base, outline=gold_dark, width=2)
+          draw.polygon([(292, 290), (432, 330), (362, 390)], fill=gold_dark, outline=gold_base, width=1)
 
-          # Левая голова и шея
-          draw.polygon([(225, 220), (210, 160), (240, 160)], fill=gold)
-          draw.ellipse([205, 140, 235, 170], fill=gold)
-          draw.polygon([(210, 150), (185, 155), (210, 160)], fill=gold) # Клюв
+          # 3. Лапы с символами власти
+          # Левая лапа с державой
+          draw.line([(180, 340), (210, 370)], fill=gold_base, width=8)
+          draw.ellipse([165, 330, 195, 360], fill=gold_light, outline=gold_dark, width=2)
+          # Правая лапа со скипетром
+          draw.line([(332, 340), (302, 370)], fill=gold_base, width=8)
+          draw.line([(340, 310), (320, 370)], fill=gold_light, width=6)
 
-          # Правая голова и шея
-          draw.polygon([(287, 220), (272, 160), (302, 160)], fill=gold)
-          draw.ellipse([277, 140, 307, 170], fill=gold)
-          draw.polygon([(302, 150), (327, 155), (302, 160)], fill=gold) # Клюв
+          # 4. Две шеи и головы
+          # Левая голова
+          draw.polygon([(230, 200), (200, 130), (245, 130)], fill=gold_base, outline=gold_dark, width=2)
+          draw.ellipse([195, 110, 230, 145], fill=gold_light, outline=gold_dark, width=2)
+          draw.polygon([(200, 120), (175, 125), (200, 135)], fill=gold_light) # Клюв левый
+          # Правая голова
+          draw.polygon([(282, 200), (312, 130), (267, 130)], fill=gold_base, outline=gold_dark, width=2)
+          draw.ellipse([282, 110, 317, 145], fill=gold_light, outline=gold_dark, width=2)
+          draw.polygon([(312, 120), (337, 125), (312, 135)], fill=gold_light) # Клюв правый
 
-          #  Имперская корона по центру командных высот
-          draw.polygon([(240, 130), (256, 95), (272, 130), (256, 115)], fill=gold)
+          # 5. Малые короны на головах
+          draw.polygon([(200, 115), (207, 95), (215, 115)], fill=gold_light)
+          draw.polygon([(297, 115), (305, 95), (312, 115)], fill=gold_light)
 
-          # Хвостовое оперение
-          draw.polygon([(240, 380), (256, 440), (272, 380)], fill=gold)
-          draw.polygon([(225, 360), (235, 430), (250, 380)], fill=gold)
-          draw.polygon([(287, 360), (277, 430), (262, 380)], fill=gold)
+          # 6. Большая Императорская корона (по центру сверху)
+          draw.polygon([(235, 90), (256, 45), (277, 90), (256, 75)], fill=gold_light, outline=gold_dark, width=2)
+          draw.ellipse([251, 40, 261, 50], fill=gold_light) # Навершие короны
+
+          # 7. Грудь и Центральный парадный щит
+          draw.polygon([(215, 210), (297, 210), (297, 320), (256, 365), (215, 320)], fill='#1e293b', outline=gold_light, width=4)
+          
+          # Тиснение внутри щита (внутренний контур)
+          draw.polygon([(225, 220), (287, 220), (287, 310), (256, 350), (225, 310)], outline=gold_dark, width=2)
 
           img.save('app/src/main/res/mipmap/ic_launcher.png')
-          print("=== Новый боевой логотип сгенерирован успешно ===")
+          print("=== Иконка с золотым двуглавым орлом сгенерирована ===")
           EOF
           
           python3 generate_icon.py
@@ -106,7 +119,7 @@ jobs:
           }
           EOF
           
-          # Билд-файл приложения с конфигурацией релизной цифровой подписи
+          # Билд-файл приложения
           cat << 'EOF' > app/build.gradle
           apply plugin: 'com.android.application'
           android {
@@ -189,7 +202,6 @@ jobs:
                   webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
                   webView.addJavascriptInterface(new WebAppInterface(this), "AndroidBridge");
                   
-                  // Перехват кликов внутри HTML-интерфейса для устранения ERR_UNKNOWN_URL_SCHEME
                   webView.setWebViewClient(new WebViewClient() {
                       @SuppressWarnings("deprecation")
                       @Override
