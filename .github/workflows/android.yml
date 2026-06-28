@@ -104,7 +104,7 @@ jobs:
           }
           EOF
           
-          # Манифест приложения с регистрацией сгенерированной иконки
+          # Манифест приложения с цифровым названием в лаунчере
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -120,11 +120,13 @@ jobs:
           </manifest>
           EOF
           
-          # Нативный Java-код
+          # Нативный Java-код с поддержкой отправки писем через Интенты Android
           cat << 'EOF' > app/src/main/java/com/glavk/app/MainActivity.java
           package com.glavk.app;
           import android.app.Activity;
           import android.content.Context;
+          import android.content.Intent;
+          import android.net.Uri;
           import android.os.Bundle;
           import android.view.Window;
           import android.view.WindowManager;
@@ -161,9 +163,24 @@ jobs:
               public class WebAppInterface {
                   Context mContext;
                   WebAppInterface(Context c) { mContext = c; }
+                  
                   @JavascriptInterface
                   public void showSystemToast(String message) {
                       Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+                  }
+
+                  @JavascriptInterface
+                  public void sendEmail(String subject, String text) {
+                      try {
+                          Intent intent = new Intent(Intent.ACTION_SENDTO);
+                          intent.setData(Uri.parse("mailto:rburov97@yandex.ru"));
+                          intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                          intent.putExtra(Intent.EXTRA_TEXT, text);
+                          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                          mContext.startActivity(intent);
+                      } catch (Exception e) {
+                          Toast.makeText(mContext, "Ошибка: нет почтового приложения", Toast.LENGTH_LONG).show();
+                      }
                   }
               }
           }
