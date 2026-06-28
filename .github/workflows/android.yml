@@ -57,7 +57,7 @@ jobs:
           draw.polygon([(220, 250), (70, 220), (110, 320)], fill=gold)
           draw.polygon([(220, 280), (80, 300), (140, 370)], fill=gold)
 
-          # Правое крыло (зеркальное отображение)
+          # Правое крыло (зеркальное отражение)
           draw.polygon([(292, 220), (422, 140), (382, 260)], fill=gold)
           draw.polygon([(292, 250), (442, 220), (402, 320)], fill=gold)
           draw.polygon([(292, 280), (432, 300), (372, 370)], fill=gold)
@@ -72,7 +72,7 @@ jobs:
           draw.ellipse([277, 140, 307, 170], fill=gold)
           draw.polygon([(302, 150), (327, 155), (302, 160)], fill=gold) # Клюв
 
-          # Имперская корона по центру командных высот
+          #  Имперская корона по центру командных высот
           draw.polygon([(240, 130), (256, 95), (272, 130), (256, 115)], fill=gold)
 
           # Хвостовое оперение
@@ -86,7 +86,7 @@ jobs:
           
           python3 generate_icon.py
 
-          # Копируем твой интерфейс
+          # Копируем интерфейс
           cp index.html app/src/main/assets/index.html
           
           # Настройки проекта
@@ -152,7 +152,7 @@ jobs:
           </manifest>
           EOF
           
-          # Нативный Java-код
+          # Нативный Java-код с глубоким перехватом URL-схем mailto:
           cat << 'EOF' > app/src/main/java/com/glavk/app/MainActivity.java
           package com.glavk.app;
           import android.app.Activity;
@@ -166,6 +166,7 @@ jobs:
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
+          import android.webkit.WebResourceRequest;
           import android.view.ViewGroup;
           import android.widget.LinearLayout;
           import android.widget.Toast;
@@ -187,7 +188,39 @@ jobs:
                   webSettings.setAllowContentAccess(true);
                   webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
                   webView.addJavascriptInterface(new WebAppInterface(this), "AndroidBridge");
-                  webView.setWebViewClient(new WebViewClient());
+                  
+                  // Перехват кликов внутри HTML-интерфейса для устранения ERR_UNKNOWN_URL_SCHEME
+                  webView.setWebViewClient(new WebViewClient() {
+                      @SuppressWarnings("deprecation")
+                      @Override
+                      public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                          if (url.startsWith("mailto:")) {
+                              handleMailto(url);
+                              return true;
+                          }
+                          return false;
+                      }
+                      @Override
+                      public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                          String url = request.getUrl().toString();
+                          if (url.startsWith("mailto:")) {
+                              handleMailto(url);
+                              return true;
+                          }
+                          return false;
+                      }
+                      private void handleMailto(String url) {
+                          try {
+                              Intent intent = new Intent(Intent.ACTION_SENDTO);
+                              intent.setData(Uri.parse(url));
+                              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                              startActivity(intent);
+                          } catch (Exception e) {
+                              Toast.makeText(MainActivity.this, "Ошибка: нет почтового приложения", Toast.LENGTH_LONG).show();
+                          }
+                      }
+                  });
+                  
                   webView.loadUrl("file:///android_asset/index.html");
                   layout.addView(webView);
                   setContentView(layout);
@@ -200,7 +233,6 @@ jobs:
                   public void showSystemToast(String message) {
                       Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
                   }
-
                   @JavascriptInterface
                   public void sendEmail(String subject, String text) {
                       try {
