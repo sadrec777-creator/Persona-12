@@ -43,64 +43,230 @@ jobs:
 
           # === ОТРИСОВКА ЗОЛОТОГО ДВУГЛАВОГО ОРЛА ===
           
-          # 1. Хвост орла (нижняя часть)
+          # 1. Хвост орла
           draw.polygon([(230, 390), (256, 460), (282, 390)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(210, 370), (225, 440), (245, 385)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(302, 370), (287, 440), (267, 385)], fill=gold_base, outline=gold_dark, width=2)
 
-          # 2. Мощные крылья (левое и правое)
-          # Левое крыло (перья вверх и вбок)
+          # 2. Мощные крылья
           draw.polygon([(220, 200), (60, 110), (120, 240)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(220, 230), (40, 180), (100, 300)], fill=gold_light, outline=gold_dark, width=2)
           draw.polygon([(220, 260), (50, 260), (120, 350)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(220, 290), (80, 330), (150, 390)], fill=gold_dark, outline=gold_base, width=1)
 
-          # Правое крыло (зеркальное отражение)
+          # Правое крыло
           draw.polygon([(292, 200), (452, 110), (392, 240)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(292, 230), (472, 180), (412, 300)], fill=gold_light, outline=gold_dark, width=2)
           draw.polygon([(292, 260), (462, 260), (392, 350)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(292, 290), (432, 330), (362, 390)], fill=gold_dark, outline=gold_base, width=1)
 
           # 3. Лапы с символами власти
-          # Левая лапа с державой
           draw.line([(180, 340), (210, 370)], fill=gold_base, width=8)
           draw.ellipse([165, 330, 195, 360], fill=gold_light, outline=gold_dark, width=2)
-          # Правая лапа со скипетром
           draw.line([(332, 340), (302, 370)], fill=gold_base, width=8)
           draw.line([(340, 310), (320, 370)], fill=gold_light, width=6)
 
           # 4. Две шеи и головы
-          # Левая голова
           draw.polygon([(230, 200), (200, 130), (245, 130)], fill=gold_base, outline=gold_dark, width=2)
           draw.ellipse([195, 110, 230, 145], fill=gold_light, outline=gold_dark, width=2)
-          draw.polygon([(200, 120), (175, 125), (200, 135)], fill=gold_light) # Клюв левый
-          # Правая голова
+          draw.polygon([(200, 120), (175, 125), (200, 135)], fill=gold_light)
+          
           draw.polygon([(282, 200), (312, 130), (267, 130)], fill=gold_base, outline=gold_dark, width=2)
           draw.ellipse([282, 110, 317, 145], fill=gold_light, outline=gold_dark, width=2)
-          draw.polygon([(312, 120), (337, 125), (312, 135)], fill=gold_light) # Клюв правый
+          draw.polygon([(312, 120), (337, 125), (312, 135)], fill=gold_light)
 
-          # 5. Малые короны на головах
+          # 5. Короны
           draw.polygon([(200, 115), (207, 95), (215, 115)], fill=gold_light)
           draw.polygon([(297, 115), (305, 95), (312, 115)], fill=gold_light)
-
-          # 6. Большая Императорская корона (по центру сверху)
           draw.polygon([(235, 90), (256, 45), (277, 90), (256, 75)], fill=gold_light, outline=gold_dark, width=2)
-          draw.ellipse([251, 40, 261, 50], fill=gold_light) # Навершие короны
+          draw.ellipse([251, 40, 261, 50], fill=gold_light)
 
-          # 7. Грудь и Центральный парадный щит
-          draw.polygon([(215, 210), (297, 210), (297, 320), (256, 365), (215, 320)], fill='#1e293b', outline=gold_light, width=4)
-          
-          # Тиснение внутри щита (внутренний контур)
+          # 6. Центральный парадный щит
+          draw.polygon([(215, 210), (297, 210), (297, 320), (256, 365), (215, 320)], fill='#0f172a', outline=gold_light, width=4)
           draw.polygon([(225, 220), (287, 220), (287, 310), (256, 350), (225, 310)], outline=gold_dark, width=2)
 
           img.save('app/src/main/res/mipmap/ic_launcher.png')
-          print("=== Иконка с золотым двуглавым орлом сгенерирована ===")
+          print("=== Премиальный золотой логотип сгенерирован ===")
           EOF
           
           python3 generate_icon.py
 
-          # Копируем интерфейс
-          cp index.html app/src/main/assets/index.html
+          # ГЕНЕРАЦИЯ ИНТЕРФЕЙСА КАЛЬКУЛЯТОРА С МИНИМАЛЬНЫМИ НАСТРОЙКАМИ ПО УМОЛЧАНИЮ
+          cat << 'EOF' > app/src/main/assets/index.html
+          <!DOCTYPE html>
+          <html lang="ru">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+              <title>12 Главк — Калькулятор ДД</title>
+              <style>
+                  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+                  body { background-color: #0b0f19; color: #f3f4f6; padding: 16px; padding-bottom: 40px; }
+                  .container { max-width: 500px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
+                  h2 { text-align: center; color: #d4af37; margin-bottom: 20px; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+                  .form-group { margin-bottom: 16px; }
+                  label { display: block; margin-bottom: 6px; font-size: 13px; color: #9ca3af; font-weight: 500; }
+                  select, input[type="number"] { width: 100%; padding: 12px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #ffffff; font-size: 15px; outline: none; transition: border-color 0.2s; }
+                  select:focus, input:focus { border-color: #d4af37; }
+                  .checkbox-card { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; cursor: pointer; }
+                  .checkbox-card input[type="checkbox"] { width: 20px; height: 20px; margin-right: 12px; accent-color: #d4af37; cursor: pointer; }
+                  .checkbox-card span { font-size: 14px; color: #e5e7eb; }
+                  .result-box { margin-top: 24px; background: linear-gradient(135deg, #1e1b4b, #111827); border: 2px solid #d4af37; border-radius: 10px; padding: 16px; text-align: center; }
+                  .result-title { font-size: 14px; color: #9ca3af; text-transform: uppercase; }
+                  .result-value { font-size: 28px; font-weight: bold; color: #d4af37; margin: 8px 0; }
+                  .btn { display: block; width: 100%; padding: 14px; background: #d4af37; color: #0b0f19; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 15px; transition: background 0.2s; }
+                  .btn:active { background: #f59e0b; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h2>Расчёт довольствия</h2>
+                  
+                  <div class="form-group">
+                      <label>Воинское звание</label>
+                      <select id="rank" onchange="calculate()">
+                          <option value="6500" selected>Рядовой / Матрос</option>
+                          <option value="7000">Ефрейтор / Старший матрос</option>
+                          <option value="7500">Младший сержант / Старшина 2 статьи</option>
+                          <option value="8000">Сержант / Старшина 1 статьи</option>
+                          <option value="8500">Старший сержант / Главный старшина</option>
+                          <option value="9500">Старшина / Главный корабельный старшина</option>
+                          <option value="10000">Прапорщик / Мичман</option>
+                          <option value="10500">Старший прапорщик / Старший мичман</option>
+                          <option value="11000">Младший лейтенант</option>
+                          <option value="11500">Лейтенант</option>
+                          <option value="12000">Старший лейтенант</option>
+                          <option value="12500">Капитан / Капитан-лейтенант</option>
+                          <option value="13000">Майор / Капитан 3 ранга</option>
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label>Типовая воинская должность (Тарифный разряд)</label>
+                      <select id="tariff" onchange="calculate()">
+                          <option value="12000" selected>1 тарифный разряд (Стрелок, дорожник)</option>
+                          <option value="13000">2 тарифный разряд (Пулеметчик, снайпер)</option>
+                          <option value="14000">3 тарифный разряд (Старший стрелок, гранатометчик)</option>
+                          <option value="15000">4 тарифный разряд (Командир танка, водитель)</option>
+                          <option value="16000">5 тарифный разряд (Командир отделения)</option>
+                          <option value="18000">6 тарифный разряд (Фельдшер, заместитель комвзвода)</option>
+                          <option value="20000">7 тарифный разряд (Старшина роты)</option>
+                          <option value="22000">8 тарифный разряд (Комвзвода, старший техник)</option>
+                          <option value="24000">9 тарифный разряд (Помощник командира корабля)</option>
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label>Выслуга лет (надбавка %)</label>
+                      <select id="experience" onchange="calculate()">
+                          <option value="0" selected>менее 2 лет (0%)</option>
+                          <option value="0.10">от 2 до 5 лет (10%)</option>
+                          <option value="0.15">от 5 до 10 лет (15%)</option>
+                          <option value="0.20">от 10 до 15 лет (20%)</option>
+                          <option value="0.25">от 15 до 20 лет (25%)</option>
+                          <option value="0.30">от 20 до 25 лет (30%)</option>
+                          <option value="0.40">более 25 лет (40%)</option>
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label>Допуск к государственной тайне</label>
+                      <select id="secrecy" onchange="calculate()">
+                          <option value="0" selected>Нет допуска (0%)</option>
+                          <option value="0.10">3 форма / Секретно (10%)</option>
+                          <option value="0.20">2 форма / Сов. секретно (20%)</option>
+                          <option value="0.25">1 форма / Особая важность (25%)</option>
+                      </select>
+                  </div>
+
+                  <label>Дополнительные надбавки и условия</label>
+                  
+                  <div class="checkbox-card" onclick="toggleCheckbox('cl')">
+                      <input type="checkbox" id="cl" onchange="calculate()" onclick="event.stopPropagation()">
+                      <span>Классная квалификация (+10%)</span>
+                  </div>
+
+                  <div class="checkbox-card" onclick="toggleCheckbox('fp')">
+                      <input type="checkbox" id="fp" onchange="calculate()" onclick="event.stopPropagation()">
+                      <span>Высший уровень Физподготовки (+100% от оклада должности)</span>
+                  </div>
+
+                  <div class="checkbox-card" onclick="toggleCheckbox('risk')">
+                      <input type="checkbox" id="risk" onchange="calculate()" onclick="event.stopPropagation()">
+                      <span>Особые условия службы / Риск (+20%)</span>
+                  </div>
+
+                  <div class="checkbox-card" onclick="toggleCheckbox('rc')">
+                      <input type="checkbox" id="rc" onchange="calculate()" onclick="event.stopPropagation()">
+                      <span>Районный коэффициент (+15%)</span>
+                  </div>
+
+                  <div class="result-box">
+                      <div class="result-title">Итоговое ДД (Примерное)</div>
+                      <div class="result-value" id="total">0 руб.</div>
+                      <div style="font-size: 11px; color: #6b7280;">С учётом вычета НДФЛ 13%</div>
+                  </div>
+
+                  <button class="btn" onclick="sendReport()">Отправить в кадры</button>
+              </div>
+
+              <script>
+                  function toggleCheckbox(id) {
+                      const cb = document.getElementById(id);
+                      cb.checked = !cb.checked;
+                      calculate();
+                  }
+
+                  function calculate() {
+                      const okladZvanie = parseFloat(document.getElementById('rank').value);
+                      const okladDolzhnost = parseFloat(document.getElementById('tariff').value);
+                      
+                      const base = okladZvanie + okladDolzhnost;
+                      
+                      let allowances = 0;
+                      
+                      // Надбавка за выслугу (от оклада денежного содержания)
+                      allowances += base * parseFloat(document.getElementById('experience').value);
+                      
+                      // Надбавка за секретку (от оклада должности)
+                      allowances += okladDolzhnost * parseFloat(document.getElementById('secrecy').value);
+                      
+                      // Классность
+                      if(document.getElementById('cl').checked) allowances += okladDolzhnost * 0.10;
+                      
+                      // Физическая подготовка (Высший уровень - 100% от должности)
+                      if(document.getElementById('fp').checked) allowances += okladDolzhnost * 1.00;
+                      
+                      // Особые условия / риск
+                      if(document.getElementById('risk').checked) allowances += okladDolzhnost * 0.20;
+                      
+                      let total = base + allowances;
+                      
+                      // Районный коэффициент
+                      if(document.getElementById('rc').checked) total = total * 1.15;
+                      
+                      // Вычет НДФЛ
+                      const cleanTotal = Math.round(total * 0.87);
+                      
+                      document.getElementById('total').innerText = cleanTotal.toLocaleString('ru-RU') + " руб.";
+                  }
+
+                  function sendReport() {
+                      const totalText = document.getElementById('total').innerText;
+                      const msg = "Выполнен расчёт ДД в приложении. Предварительный итог " + totalText;
+                      if (typeof AndroidBridge !== 'undefined') {
+                          AndroidBridge.sendEmail("Расчет ДД кандидатом", msg);
+                      } else {
+                          alert(msg);
+                      }
+                  }
+
+                  // Первый запуск для инициализации базовых минимальных цифр
+                  calculate();
+              </script>
+          </body>
+          </html>
+          EOF
           
           # Настройки проекта
           cat << 'EOF' > settings.gradle
