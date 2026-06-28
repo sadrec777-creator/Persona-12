@@ -13,13 +13,62 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Python and Pillow
+        run: |
+          pip install Pillow
+
       - name: Auto-Generate Android Project Structure
         run: |
-          echo "=== Создание чистой структуры ==="
+          echo "=== Создание структуры и генерация эмблемы ==="
           mkdir -p app/src/main/java/com/glavk/app
           mkdir -p app/src/main/assets
+          mkdir -p app/src/main/res/mipmap
           
-          # Копируем твой index.html из корня в папку assets приложения
+          # Скрипт генерации премиальной тактической иконки 12 Главка
+          cat << 'EOF' > generate_icon.py
+          from PIL import Image, ImageDraw
+
+          # Создаем холст 512x512
+          img = Image.new('RGBA', (512, 512), '#050b14')
+          draw = ImageDraw.Draw(img)
+
+          # Внешние защитные тактические кольца
+          draw.ellipse([15, 15, 497, 497], outline='#38bdf8', width=4)
+          draw.ellipse([25, 25, 487, 487], outline='#d4af37', width=6)
+
+          # Отрисовка геометрии крыльев (стилизация под имперского орла)
+          gold = '#d4af37'
+          # Левое крыло
+          draw.polygon([(190, 160), (80, 130), (110, 200)], fill=gold)
+          draw.polygon([(190, 210), (60, 190), (95, 260)], fill=gold)
+          draw.polygon([(190, 260), (70, 260), (120, 320)], fill=gold)
+          # Правое крыло (зеркальное отражение)
+          draw.polygon([(322, 160), (432, 130), (402, 200)], fill=gold)
+          draw.polygon([(322, 210), (452, 190), (417, 260)], fill=gold)
+          draw.polygon([(322, 260), (442, 260), (392, 320)], fill=gold)
+
+          # Центральный боевой щит
+          draw.polygon([(185, 180), (327, 180), (327, 340), (256, 410), (185, 340)], fill='#081125', outline='#38bdf8', width=6)
+
+          # Отрисовка тактической цифры "1" (Трафаретный армейский блок)
+          draw.rectangle([210, 220, 228, 315], fill='#ffffff')
+          draw.polygon([(192, 240), (210, 220), (210, 240)], fill='#ffffff')
+          draw.rectangle([200, 305, 238, 315], fill='#ffffff')
+
+          # Отрисовка тактической цифры "2" (Технологичные сегменты)
+          draw.rectangle([255, 220, 295, 235], fill='#ffffff')
+          draw.rectangle([280, 235, 295, 260], fill='#ffffff')
+          draw.rectangle([255, 260, 295, 275], fill='#ffffff')
+          draw.rectangle([255, 275, 270, 300], fill='#ffffff')
+          draw.rectangle([255, 300, 295, 315], fill='#ffffff')
+
+          img.save('app/src/main/res/mipmap/ic_launcher.png')
+          print("=== Иконка успешно сгенерирована ===")
+          EOF
+          
+          python3 generate_icon.py
+
+          # Копируем твой прокачанный интерфейс с калькуляторами
           cp index.html app/src/main/assets/index.html
           
           # Настройки проекта
@@ -55,12 +104,12 @@ jobs:
           }
           EOF
           
-          # Манифест приложения
+          # Манифест приложения с регистрацией сгенерированной иконки
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <uses-permission android:name="android.permission.INTERNET" />
-              <application android:label="12 Главк" android:allowBackup="true" android:supportsRtl="true">
+              <application android:label="12 Главк" android:icon="@mipmap/ic_launcher" android:allowBackup="true" android:supportsRtl="true">
                   <activity android:name=".MainActivity" android:exported="true">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
@@ -71,7 +120,7 @@ jobs:
           </manifest>
           EOF
           
-          # Java-код с премиум-мостом
+          # Нативный Java-код
           cat << 'EOF' > app/src/main/java/com/glavk/app/MainActivity.java
           package com.glavk.app;
           import android.app.Activity;
