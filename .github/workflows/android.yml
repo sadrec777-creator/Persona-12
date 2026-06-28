@@ -91,178 +91,311 @@ jobs:
           
           python3 generate_icon.py
 
-          # ГЕНЕРАЦИЯ ИНТЕРФЕЙСА КАЛЬКУЛЯТОРА С МИНИМАЛЬНЫМИ НАСТРОЙКАМИ ПО УМОЛЧАНИЮ
+          # ГЕНЕРАЦИЯ ПОЛНОЦЕННОГО МНОГОФУНКЦИОНАЛЬНОГО ИНТЕРФЕЙСА С ВКЛАДКАМИ
           cat << 'EOF' > app/src/main/assets/index.html
           <!DOCTYPE html>
           <html lang="ru">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-              <title>12 Главк — Калькулятор ДД</title>
+              <title>12 Главк — Мобильный Комплекс</title>
               <style>
                   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-                  body { background-color: #0b0f19; color: #f3f4f6; padding: 16px; padding-bottom: 40px; }
-                  .container { max-width: 500px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
-                  h2 { text-align: center; color: #d4af37; margin-bottom: 20px; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
-                  .form-group { margin-bottom: 16px; }
+                  body { background-color: #0b0f19; color: #f3f4f6; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+                  
+                  /* Шапка */
+                  .header { background: #111827; border-bottom: 1px solid #1f2937; padding: 14px; text-align: center; font-size: 16px; font-weight: bold; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+                  
+                  /* Контентная область */
+                  .content-area { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 80px; }
+                  .tab-content { display: none; max-width: 500px; margin: 0 auto; }
+                  .tab-content.active { display: block; }
+                  
+                  /* Стили карточек и форм */
+                  .card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 18px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); margin-bottom: 16px; }
+                  h3 { color: #d4af37; margin-bottom: 14px; font-size: 16px; text-transform: uppercase; border-left: 3px solid #d4af37; padding-left: 8px; }
+                  p { font-size: 14px; color: #d1d5db; line-height: 1.5; margin-bottom: 10px; }
+                  
+                  .form-group { margin-bottom: 14px; }
                   label { display: block; margin-bottom: 6px; font-size: 13px; color: #9ca3af; font-weight: 500; }
-                  select, input[type="number"] { width: 100%; padding: 12px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #ffffff; font-size: 15px; outline: none; transition: border-color 0.2s; }
+                  select, input[type="number"], input[type="text"] { width: 100%; padding: 11px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #ffffff; font-size: 14px; outline: none; }
                   select:focus, input:focus { border-color: #d4af37; }
+                  
                   .checkbox-card { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; cursor: pointer; }
-                  .checkbox-card input[type="checkbox"] { width: 20px; height: 20px; margin-right: 12px; accent-color: #d4af37; cursor: pointer; }
-                  .checkbox-card span { font-size: 14px; color: #e5e7eb; }
-                  .result-box { margin-top: 24px; background: linear-gradient(135deg, #1e1b4b, #111827); border: 2px solid #d4af37; border-radius: 10px; padding: 16px; text-align: center; }
-                  .result-title { font-size: 14px; color: #9ca3af; text-transform: uppercase; }
-                  .result-value { font-size: 28px; font-weight: bold; color: #d4af37; margin: 8px 0; }
-                  .btn { display: block; width: 100%; padding: 14px; background: #d4af37; color: #0b0f19; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 15px; transition: background 0.2s; }
+                  .checkbox-card input[type="checkbox"] { width: 18px; height: 18px; margin-right: 12px; accent-color: #d4af37; }
+                  .checkbox-card span { font-size: 13px; color: #e5e7eb; }
+                  
+                  .result-box { margin-top: 20px; background: linear-gradient(135deg, #1e1b4b, #111827); border: 2px solid #d4af37; border-radius: 10px; padding: 14px; text-align: center; }
+                  .result-title { font-size: 12px; color: #9ca3af; text-transform: uppercase; }
+                  .result-value { font-size: 26px; font-weight: bold; color: #d4af37; margin: 6px 0; }
+                  
+                  .btn { display: block; width: 100%; padding: 12px; background: #d4af37; color: #0b0f19; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
                   .btn:active { background: #f59e0b; }
+                  
+                  /* Нижнее меню навигации */
+                  .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #111827; border-top: 1px solid #1f2937; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+                  .nav-item { flex: 1; text-align: center; background: none; border: none; color: #9ca3af; font-size: 11px; font-weight: 500; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 4px; }
+                  .nav-item.active { color: #d4af37; }
+                  .nav-icon { font-size: 18px; font-weight: bold; }
               </style>
           </head>
           <body>
-              <div class="container">
-                  <h2>Расчёт довольствия</h2>
+
+              <div class="header" id="header-title">Главная</div>
+
+              <div class="content-area">
                   
-                  <div class="form-group">
-                      <label>Воинское звание</label>
-                      <select id="rank" onchange="calculate()">
-                          <option value="6500" selected>Рядовой / Матрос</option>
-                          <option value="7000">Ефрейтор / Старший матрос</option>
-                          <option value="7500">Младший сержант / Старшина 2 статьи</option>
-                          <option value="8000">Сержант / Старшина 1 статьи</option>
-                          <option value="8500">Старший сержант / Главный старшина</option>
-                          <option value="9500">Старшина / Главный корабельный старшина</option>
-                          <option value="10000">Прапорщик / Мичман</option>
-                          <option value="10500">Старший прапорщик / Старший мичман</option>
-                          <option value="11000">Младший лейтенант</option>
-                          <option value="11500">Лейтенант</option>
-                          <option value="12000">Старший лейтенант</option>
-                          <option value="12500">Капитан / Капитан-лейтенант</option>
-                          <option value="13000">Майор / Капитан 3 ранга</option>
-                      </select>
+                  <div id="tab-main" class="tab-content active">
+                      <div class="card">
+                          <h3>12 Главное управление МО РФ</h3>
+                          <p>Добро пожаловать в специализированный мобильный комплекс отбора кандидатов на военную службу по контракту.</p>
+                          <p>Здесь вы можете рассчитать параметры будущего финансового обеспечения, проверить свои нормативы по физической подготовке и подать заявку в кадровый орган.</p>
+                      </div>
+                      <div class="card">
+                          <h3>Преимущества службы</h3>
+                          <p>• Повышенное денежное довольствие со старта службы.</p>
+                          <p>• Служебное жилье или полная компенсация найма.</p>
+                          <p>• Военная ипотека через 3 года службы.</p>
+                      </div>
                   </div>
 
-                  <div class="form-group">
-                      <label>Типовая воинская должность (Тарифный разряд)</label>
-                      <select id="tariff" onchange="calculate()">
-                          <option value="12000" selected>1 тарифный разряд (Стрелок, дорожник)</option>
-                          <option value="13000">2 тарифный разряд (Пулеметчик, снайпер)</option>
-                          <option value="14000">3 тарифный разряд (Старший стрелок, гранатометчик)</option>
-                          <option value="15000">4 тарифный разряд (Командир танка, водитель)</option>
-                          <option value="16000">5 тарифный разряд (Командир отделения)</option>
-                          <option value="18000">6 тарифный разряд (Фельдшер, заместитель комвзвода)</option>
-                          <option value="20000">7 тарифный разряд (Старшина роты)</option>
-                          <option value="22000">8 тарифный разряд (Комвзвода, старший техник)</option>
-                          <option value="24000">9 тарифный разряд (Помощник командира корабля)</option>
-                      </select>
+                  <div id="tab-dd" class="tab-content">
+                      <div class="card">
+                          <h3>Расчёт денежного довольствия</h3>
+                          
+                          <div class="form-group">
+                              <label>Воинское звание</label>
+                              <select id="rank" onchange="calculateDD()">
+                                  <option value="6500" selected>Рядовой / Матрос</option>
+                                  <option value="7000">Ефрейтор / Старший матрос</option>
+                                  <option value="7500">Младший сержант</option>
+                                  <option value="8000">Сержант</option>
+                                  <option value="8500">Старший сержант</option>
+                                  <option value="10000">Прапорщик</option>
+                                  <option value="11500">Лейтенант</option>
+                              </select>
+                          </div>
+
+                          <div class="form-group">
+                              <label>Тарифный разряд должности</label>
+                              <select id="tariff" onchange="calculateDD()">
+                                  <option value="12000" selected>1 тарифный разряд (Стрелок)</option>
+                                  <option value="13000">2 тарифный разряд (Пулеметчик)</option>
+                                  <option value="14000">3 тарифный разряд (Старший стрелок)</option>
+                                  <option value="15000">4 тарифный разряд (Водитель)</option>
+                                  <option value="16000">5 тарифный разряд (Командир отделения)</option>
+                              </select>
+                          </div>
+
+                          <div class="form-group">
+                              <label>Выслуга лет</label>
+                              <select id="experience" onchange="calculateDD()">
+                                  <option value="0" selected>менее 2 лет (0%)</option>
+                                  <option value="0.10">от 2 до 5 лет (10%)</option>
+                                  <option value="0.15">от 5 до 10 лет (15%)</option>
+                                  <option value="0.20">от 10 до 15 лет (20%)</option>
+                              </select>
+                          </div>
+
+                          <div class="form-group">
+                              <label>Допуск к гостайне</label>
+                              <select id="secrecy" onchange="calculateDD()">
+                                  <option value="0" selected>Нет допуска (0%)</option>
+                                  <option value="0.10">3 форма (10%)</option>
+                                  <option value="0.20">2 форма (20%)</option>
+                                  <option value="0.25">1 форма (25%)</option>
+                              </select>
+                          </div>
+
+                          <label>Дополнительные надбавки</label>
+                          
+                          <div class="checkbox-card" onclick="toggleDDCheckbox('cl')">
+                              <input type="checkbox" id="cl" onchange="calculateDD()" onclick="event.stopPropagation()">
+                              <span>Классная квалификация (+10%)</span>
+                          </div>
+
+                          <div class="checkbox-card" onclick="toggleDDCheckbox('fp_bonus')">
+                              <input type="checkbox" id="fp_bonus" onchange="calculateDD()" onclick="event.stopPropagation()">
+                              <span>Высший уровень ФП (+100% от должности)</span>
+                          </div>
+
+                          <div class="checkbox-card" onclick="toggleDDCheckbox('risk')">
+                              <input type="checkbox" id="risk" onchange="calculateDD()" onclick="event.stopPropagation()">
+                              <span>Особые условия службы (+20%)</span>
+                          </div>
+
+                          <div class="checkbox-card" onclick="toggleDDCheckbox('rc')">
+                              <input type="checkbox" id="rc" onchange="calculateDD()" onclick="event.stopPropagation()">
+                              <span>Районный коэффициент (+15%)</span>
+                          </div>
+
+                          <div class="result-box">
+                              <div class="result-title">Итого на руки (Примерно)</div>
+                              <div class="result-value" id="dd-total">0 руб.</div>
+                              <div style="font-size: 11px; color: #6b7280;">С учётом вычета НДФЛ 13%</div>
+                          </div>
+                      </div>
                   </div>
 
-                  <div class="form-group">
-                      <label>Выслуга лет (надбавка %)</label>
-                      <select id="experience" onchange="calculate()">
-                          <option value="0" selected>менее 2 лет (0%)</option>
-                          <option value="0.10">от 2 до 5 лет (10%)</option>
-                          <option value="0.15">от 5 до 10 лет (15%)</option>
-                          <option value="0.20">от 10 до 15 лет (20%)</option>
-                          <option value="0.25">от 15 до 20 лет (25%)</option>
-                          <option value="0.30">от 20 до 25 лет (30%)</option>
-                          <option value="0.40">более 25 лет (40%)</option>
-                      </select>
+                  <div id="tab-fp" class="tab-content">
+                      <div class="card">
+                          <h3>Проверка физподготовки</h3>
+                          
+                          <div class="form-group">
+                              <label>Возрастная категория</label>
+                              <select id="age-cat">
+                                  <option value="1">Категория 1 (до 30 лет)</option>
+                                  <option value="2">Категория 2 (30 - 35 лет)</option>
+                                  <option value="3">Категория 3 (35+ лет)</option>
+                              </select>
+                          </div>
+
+                          <div class="form-group">
+                              <label>Подтягивания (кол-во)</label>
+                              <input type="number" id="fp-pullups" placeholder="0" min="0">
+                          </div>
+
+                          <div class="form-group">
+                              <label>Бег на 100 м (сек)</label>
+                              <input type="number" step="0.1" id="fp-run100" placeholder="0.0" min="0">
+                          </div>
+
+                          <div class="form-group">
+                              <label>Бег на 3 км (мин.сек)</label>
+                              <input type="number" step="0.01" id="fp-run3k" placeholder="12.00" min="0">
+                          </div>
+
+                          <button class="btn" onclick="calculateFP()">Рассчитать баллы</button>
+
+                          <div class="result-box" id="fp-result-box" style="display:none;">
+                              <div class="result-title">Результат проверки</div>
+                              <div class="result-value" id="fp-total-score">0 баллов</div>
+                              <div id="fp-status" style="font-size: 14px; font-weight: bold; margin-top: 5px;"></div>
+                          </div>
+                      </div>
                   </div>
 
-                  <div class="form-group">
-                      <label>Допуск к государственной тайне</label>
-                      <select id="secrecy" onchange="calculate()">
-                          <option value="0" selected>Нет допуска (0%)</option>
-                          <option value="0.10">3 форма / Секретно (10%)</option>
-                          <option value="0.20">2 форма / Сов. секретно (20%)</option>
-                          <option value="0.25">1 форма / Особая важность (25%)</option>
-                      </select>
+                  <div id="tab-contacts" class="tab-content">
+                      <div class="card">
+                          <h3>Связаться с кадрами</h3>
+                          <p>Вы можете направить результаты расчетов или свои контактные данные напрямую офицеру по тестированию и комплектованию.</p>
+                          <div class="form-group" style="margin-top: 15px;">
+                              <label>Ваше имя</label>
+                              <input type="text" id="cand-name" placeholder="Иван Иванов">
+                          </div>
+                          <div class="form-group">
+                              <label>Телефон для связи</label>
+                              <input type="text" id="cand-phone" placeholder="+7 (999) 000-00-00">
+                          </div>
+                          <button class="btn" onclick="sendData()">Отправить анкету</button>
+                      </div>
                   </div>
 
-                  <label>Дополнительные надбавки и условия</label>
-                  
-                  <div class="checkbox-card" onclick="toggleCheckbox('cl')">
-                      <input type="checkbox" id="cl" onchange="calculate()" onclick="event.stopPropagation()">
-                      <span>Классная квалификация (+10%)</span>
-                  </div>
-
-                  <div class="checkbox-card" onclick="toggleCheckbox('fp')">
-                      <input type="checkbox" id="fp" onchange="calculate()" onclick="event.stopPropagation()">
-                      <span>Высший уровень Физподготовки (+100% от оклада должности)</span>
-                  </div>
-
-                  <div class="checkbox-card" onclick="toggleCheckbox('risk')">
-                      <input type="checkbox" id="risk" onchange="calculate()" onclick="event.stopPropagation()">
-                      <span>Особые условия службы / Риск (+20%)</span>
-                  </div>
-
-                  <div class="checkbox-card" onclick="toggleCheckbox('rc')">
-                      <input type="checkbox" id="rc" onchange="calculate()" onclick="event.stopPropagation()">
-                      <span>Районный коэффициент (+15%)</span>
-                  </div>
-
-                  <div class="result-box">
-                      <div class="result-title">Итоговое ДД (Примерное)</div>
-                      <div class="result-value" id="total">0 руб.</div>
-                      <div style="font-size: 11px; color: #6b7280;">С учётом вычета НДФЛ 13%</div>
-                  </div>
-
-                  <button class="btn" onclick="sendReport()">Отправить в кадры</button>
               </div>
 
+              <nav class="nav-bar">
+                  <button class="nav-item active" onclick="switchTab('main', 'Главная')">
+                      <span class="nav-icon">★</span>
+                      <span>Главная</span>
+                  </button>
+                  <button class="nav-item" onclick="switchTab('dd', 'Расчёт ДД')">
+                      <span class="nav-icon">₽</span>
+                      <span>Довольствие</span>
+                  </button>
+                  <button class="nav-item" onclick="switchTab('fp', 'Нормативы ФП')">
+                      <span class="nav-icon">⚔</span>
+                      <span>Физподготовка</span>
+                  </button>
+                  <button class="nav-item" onclick="switchTab('contacts', 'Контакты')">
+                      <span class="nav-icon">✉</span>
+                      <span>Контакты</span>
+                  </button>
+              </nav>
+
               <script>
-                  function toggleCheckbox(id) {
-                      const cb = document.getElementById(id);
-                      cb.checked = !cb.checked;
-                      calculate();
-                  }
-
-                  function calculate() {
-                      const okladZvanie = parseFloat(document.getElementById('rank').value);
-                      const okladDolzhnost = parseFloat(document.getElementById('tariff').value);
+                  // Переключение вкладок
+                  function switchTab(tabId, title) {
+                      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
                       
-                      const base = okladZvanie + okladDolzhnost;
+                      document.getElementById('tab-' + tabId).classList.add('active');
+                      document.getElementById('header-title').innerText = title;
                       
-                      let allowances = 0;
-                      
-                      // Надбавка за выслугу (от оклада денежного содержания)
-                      allowances += base * parseFloat(document.getElementById('experience').value);
-                      
-                      // Надбавка за секретку (от оклада должности)
-                      allowances += okladDolzhnost * parseFloat(document.getElementById('secrecy').value);
-                      
-                      // Классность
-                      if(document.getElementById('cl').checked) allowances += okladDolzhnost * 0.10;
-                      
-                      // Физическая подготовка (Высший уровень - 100% от должности)
-                      if(document.getElementById('fp').checked) allowances += okladDolzhnost * 1.00;
-                      
-                      // Особые условия / риск
-                      if(document.getElementById('risk').checked) allowances += okladDolzhnost * 0.20;
-                      
-                      let total = base + allowances;
-                      
-                      // Районный коэффициент
-                      if(document.getElementById('rc').checked) total = total * 1.15;
-                      
-                      // Вычет НДФЛ
-                      const cleanTotal = Math.round(total * 0.87);
-                      
-                      document.getElementById('total').innerText = cleanTotal.toLocaleString('ru-RU') + " руб.";
-                  }
-
-                  function sendReport() {
-                      const totalText = document.getElementById('total').innerText;
-                      const msg = "Выполнен расчёт ДД в приложении. Предварительный итог " + totalText;
-                      if (typeof AndroidBridge !== 'undefined') {
-                          AndroidBridge.sendEmail("Расчет ДД кандидатом", msg);
-                      } else {
-                          alert(msg);
+                      const event = window.event;
+                      if(event) {
+                          let btn = event.currentTarget;
+                          if(btn) btn.classList.add('active');
                       }
                   }
 
-                  // Первый запуск для инициализации базовых минимальных цифр
-                  calculate();
+                  // Функции калькулятора ДД
+                  function toggleDDCheckbox(id) {
+                      const cb = document.getElementById(id);
+                      cb.checked = !cb.checked;
+                      calculateDD();
+                  }
+
+                  function calculateDD() {
+                      const okladZvanie = parseFloat(document.getElementById('rank').value);
+                      const okladDolzhnost = parseFloat(document.getElementById('tariff').value);
+                      const base = okladZvanie + okladDolzhnost;
+                      
+                      let allowances = 0;
+                      allowments = 0;
+                      
+                      allowances += base * parseFloat(document.getElementById('experience').value);
+                      allowances += okladDolzhnost * parseFloat(document.getElementById('secrecy').value);
+                      
+                      if(document.getElementById('cl').checked) allowances += okladDolzhnost * 0.10;
+                      if(document.getElementById('fp_bonus').checked) allowances += okladDolzhnost * 1.00;
+                      if(document.getElementById('risk').checked) allowances += okladDolzhnost * 0.20;
+                      
+                      let total = base + allowances;
+                      if(document.getElementById('rc').checked) total = total * 1.15;
+                      
+                      const cleanTotal = Math.round(total * 0.87);
+                      document.getElementById('dd-total').innerText = cleanTotal.toLocaleString('ru-RU') + " руб.";
+                  }
+
+                  // Функции калькулятора ФП
+                  function calculateFP() {
+                      const pullups = parseInt(document.getElementById('fp-pullups').value) || 0;
+                      let score = pullups * 5; // Условный упрощенный расчет баллов
+                      
+                      document.getElementById('fp-result-box').style.display = "block";
+                      document.getElementById('fp-total-score').innerText = score + " баллов";
+                      
+                      const status = document.getElementById('fp-status');
+                      if(score >= 75) {
+                          status.innerText = "Высший уровень выполнения нормативов!";
+                          status.style.color = "#4ade80";
+                      } else if(score >= 50) {
+                          status.innerText = "Норматив выполнен успешно.";
+                          status.style.color = "#fbbf24";
+                      } else {
+                          status.innerText = "Неудовлетворительно. Требуется подготовка.";
+                          status.style.color = "#ef4444";
+                      }
+                  }
+
+                  // Отправка данных анкеты
+                  function sendData() {
+                      const name = document.getElementById('cand-name').value || "Не указано";
+                      const phone = document.getElementById('cand-phone').value || "Не указано";
+                      const dd = document.getElementById('dd-total').innerText;
+                      
+                      const subject = "Новая анкета кандидата: " + name;
+                      const body = "Имя: " + name + "\nТелефон: " + phone + "\nРассчитанное ДД на минимальных настройках: " + dd;
+                      
+                      if (typeof AndroidBridge !== 'undefined') {
+                          AndroidBridge.sendEmail(subject, body);
+                      } else {
+                          alert("Данные отправлены:\n" + body);
+                      }
+                  }
+
+                  // Первичный автоматический расчёт базового ДД на минималках при открытии
+                  calculateDD();
               </script>
           </body>
           </html>
