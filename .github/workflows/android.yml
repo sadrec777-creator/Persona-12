@@ -28,45 +28,40 @@ jobs:
           cat << 'EOF' > generate_icon.py
           from PIL import Image, ImageDraw
 
-          # Роскошный глубокий фон (темно-синий тактический бархат)
           img = Image.new('RGBA', (512, 512), '#020617')
           draw = ImageDraw.Draw(img)
 
-          gold_light = '#fbbf24' # Яркое золото для бликов
-          gold_base  = '#d4af37' # Классическое геральдическое золото
-          gold_dark  = '#b45309' # Темное золото для контуров и объема
+          gold_light = '#fbbf24'
+          gold_base  = '#d4af37'
+          gold_dark  = '#b45309'
 
-          # Внешний премиальный золотой кант
           draw.ellipse([15, 15, 497, 497], outline=gold_dark, width=6)
           draw.ellipse([22, 22, 490, 490], outline=gold_base, width=3)
           draw.ellipse([35, 35, 477, 477], outline=gold_light, width=1)
-
-          # === ОТРИСОВКА ЗОЛОТОГО ДВУГЛАВОГО ОРЛА ===
           
-          # 1. Хвост орла
+          # Хвост орла
           draw.polygon([(230, 390), (256, 460), (282, 390)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(210, 370), (225, 440), (245, 385)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(302, 370), (287, 440), (267, 385)], fill=gold_base, outline=gold_dark, width=2)
 
-          # 2. Мощные крылья
+          # Крылья
           draw.polygon([(220, 200), (60, 110), (120, 240)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(220, 230), (40, 180), (100, 300)], fill=gold_light, outline=gold_dark, width=2)
           draw.polygon([(220, 260), (50, 260), (120, 350)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(220, 290), (80, 330), (150, 390)], fill=gold_dark, outline=gold_base, width=1)
 
-          # Правое крыло
           draw.polygon([(292, 200), (452, 110), (392, 240)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(292, 230), (472, 180), (412, 300)], fill=gold_light, outline=gold_dark, width=2)
           draw.polygon([(292, 260), (462, 260), (392, 350)], fill=gold_base, outline=gold_dark, width=2)
           draw.polygon([(292, 290), (432, 330), (362, 390)], fill=gold_dark, outline=gold_base, width=1)
 
-          # 3. Лапы с символами власти
+          # Лапы
           draw.line([(180, 340), (210, 370)], fill=gold_base, width=8)
           draw.ellipse([165, 330, 195, 360], fill=gold_light, outline=gold_dark, width=2)
           draw.line([(332, 340), (302, 370)], fill=gold_base, width=8)
           draw.line([(340, 310), (320, 370)], fill=gold_light, width=6)
 
-          # 4. Две шеи и головы
+          # Головы
           draw.polygon([(230, 200), (200, 130), (245, 130)], fill=gold_base, outline=gold_dark, width=2)
           draw.ellipse([195, 110, 230, 145], fill=gold_light, outline=gold_dark, width=2)
           draw.polygon([(200, 120), (175, 125), (200, 135)], fill=gold_light)
@@ -75,91 +70,163 @@ jobs:
           draw.ellipse([282, 110, 317, 145], fill=gold_light, outline=gold_dark, width=2)
           draw.polygon([(312, 120), (337, 125), (312, 135)], fill=gold_light)
 
-          # 5. Короны
+          # Короны
           draw.polygon([(200, 115), (207, 95), (215, 115)], fill=gold_light)
           draw.polygon([(297, 115), (305, 95), (312, 115)], fill=gold_light)
           draw.polygon([(235, 90), (256, 45), (277, 90), (256, 75)], fill=gold_light, outline=gold_dark, width=2)
           draw.ellipse([251, 40, 261, 50], fill=gold_light)
 
-          # 6. Центральный парадный щит
+          # Центральный щит
           draw.polygon([(215, 210), (297, 210), (297, 320), (256, 365), (215, 320)], fill='#0f172a', outline=gold_light, width=4)
           draw.polygon([(225, 220), (287, 220), (287, 310), (256, 350), (225, 310)], outline=gold_dark, width=2)
 
           img.save('app/src/main/res/mipmap/ic_launcher.png')
-          print("=== Премиальный золотой логотип сгенерирован ===")
           EOF
           
           python3 generate_icon.py
 
-          # ГЕНЕРАЦИЯ ПОЛНОЦЕННОГО МНОГОФУНКЦИОНАЛЬНОГО ИНТЕРФЕЙСА С ВКЛАДКАМИ
+          # ГЕНЕРАЦИЯ ИНТЕРФЕЙСА С ЭФФЕКТОМ ЖИДКОГО СТЕКЛА И НОВЫМИ ВКЛАДКАМИ
           cat << 'EOF' > app/src/main/assets/index.html
           <!DOCTYPE html>
           <html lang="ru">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-              <title>12 Главк — Мобильный Комплекс</title>
+              <title>12 Главк</title>
               <style>
                   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-                  body { background-color: #0b0f19; color: #f3f4f6; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
                   
-                  /* Шапка */
-                  .header { background: #111827; border-bottom: 1px solid #1f2937; padding: 14px; text-align: center; font-size: 16px; font-weight: bold; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+                  /* Глубокий темно-синий тактический фон */
+                  body { 
+                      background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+                      color: #f3f4f6; 
+                      display: flex; 
+                      flex-direction: column; 
+                      height: 100vh; 
+                      overflow: hidden; 
+                  }
                   
-                  /* Контентная область */
-                  .content-area { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 80px; }
+                  /* Контентная зона */
+                  .content-area { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 85px; }
                   .tab-content { display: none; max-width: 500px; margin: 0 auto; }
                   .tab-content.active { display: block; }
                   
-                  /* Стили карточек и форм */
-                  .card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 18px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); margin-bottom: 16px; }
-                  h3 { color: #d4af37; margin-bottom: 14px; font-size: 16px; text-transform: uppercase; border-left: 3px solid #d4af37; padding-left: 8px; }
-                  p { font-size: 14px; color: #d1d5db; line-height: 1.5; margin-bottom: 10px; }
+                  /* Эффект прозрачного жидкого стекла (iOS Glassmorphism) */
+                  .card { 
+                      background: rgba(255, 255, 255, 0.04);
+                      backdrop-filter: blur(20px);
+                      -webkit-backdrop-filter: blur(20px);
+                      border: 1px solid rgba(255, 255, 255, 0.12);
+                      border-radius: 16px; 
+                      padding: 20px; 
+                      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+                      margin-bottom: 16px; 
+                  }
+                  
+                  h3 { color: #d4af37; margin-bottom: 16px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
                   
                   .form-group { margin-bottom: 14px; }
-                  label { display: block; margin-bottom: 6px; font-size: 13px; color: #9ca3af; font-weight: 500; }
-                  select, input[type="number"], input[type="text"] { width: 100%; padding: 11px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #ffffff; font-size: 14px; outline: none; }
-                  select:focus, input:focus { border-color: #d4af37; }
+                  label { display: block; margin-bottom: 6px; font-size: 13px; color: #9ca3af; }
                   
-                  .checkbox-card { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; cursor: pointer; }
+                  /* Поля ввода в стиле жидкого стекла */
+                  select, input[type="number"], input[type="text"], input[type="date"], textarea { 
+                      width: 100%; 
+                      padding: 12px; 
+                      background: rgba(255, 255, 255, 0.06);
+                      border: 1px solid rgba(255, 255, 255, 0.1);
+                      border-radius: 10px; 
+                      color: #ffffff; 
+                      font-size: 14px; 
+                      outline: none;
+                      transition: all 0.3s ease;
+                  }
+                  select:focus, input:focus, textarea:focus { 
+                      border-color: rgba(212, 175, 55, 0.5);
+                      background: rgba(255, 255, 255, 0.1);
+                      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+                  }
+                  
+                  .checkbox-card { 
+                      background: rgba(255, 255, 255, 0.03);
+                      border: 1px solid rgba(255, 255, 255, 0.08);
+                      border-radius: 10px; 
+                      padding: 12px; 
+                      margin-bottom: 10px; 
+                      display: flex; 
+                      align-items: center; 
+                      cursor: pointer; 
+                  }
                   .checkbox-card input[type="checkbox"] { width: 18px; height: 18px; margin-right: 12px; accent-color: #d4af37; }
-                  .checkbox-card span { font-size: 13px; color: #e5e7eb; }
                   
-                  .result-box { margin-top: 20px; background: linear-gradient(135deg, #1e1b4b, #111827); border: 2px solid #d4af37; border-radius: 10px; padding: 14px; text-align: center; }
-                  .result-title { font-size: 12px; color: #9ca3af; text-transform: uppercase; }
-                  .result-value { font-size: 26px; font-weight: bold; color: #d4af37; margin: 6px 0; }
+                  .result-box { 
+                      margin-top: 20px; 
+                      background: linear-gradient(135deg, rgba(30, 27, 75, 0.4), rgba(17, 24, 39, 0.4));
+                      border: 1px solid rgba(212, 175, 55, 0.4); 
+                      border-radius: 12px; 
+                      padding: 16px; 
+                      text-align: center; 
+                  }
+                  .result-value { font-size: 26px; font-weight: bold; color: #d4af37; margin: 4px 0; }
                   
-                  .btn { display: block; width: 100%; padding: 12px; background: #d4af37; color: #0b0f19; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-                  .btn:active { background: #f59e0b; }
+                  .btn { 
+                      display: block; 
+                      width: 100%; 
+                      padding: 14px; 
+                      background: linear-gradient(135deg, #d4af37 0%, #aa841a 100%);
+                      color: #0b0f19; 
+                      border: none; 
+                      border-radius: 10px; 
+                      font-size: 14px; 
+                      font-weight: bold; 
+                      text-transform: uppercase; 
+                      cursor: pointer; 
+                      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+                  }
+                  .btn:active { transform: scale(0.98); }
                   
-                  /* Нижнее меню навигации */
-                  .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #111827; border-top: 1px solid #1f2937; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-                  .nav-item { flex: 1; text-align: center; background: none; border: none; color: #9ca3af; font-size: 11px; font-weight: 500; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 4px; }
+                  /* Стили календаря */
+                  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; text-align: center; }
+                  .calendar-day { padding: 10px 0; background: rgba(255, 255, 255, 0.04); border-radius: 6px; font-size: 13px; cursor: pointer; }
+                  .calendar-day.active { background: #d4af37; color: #0b0f19; font-weight: bold; }
+                  .calendar-day.has-note { border-bottom: 3px solid #60a5fa; }
+                  
+                  /* Панель навигации iOS Glassmorphism в самом низу */
+                  .nav-bar { 
+                      position: fixed; 
+                      bottom: 0; left: 0; right: 0; 
+                      height: 68px; 
+                      background: rgba(17, 24, 37, 0.4);
+                      backdrop-filter: blur(30px);
+                      -webkit-backdrop-filter: blur(30px);
+                      border-top: 1px solid rgba(255, 255, 255, 0.08); 
+                      display: flex; 
+                      justify-content: space-around; 
+                      align-items: center; 
+                      z-index: 100; 
+                      padding-bottom: 8px;
+                  }
+                  .nav-item { 
+                      flex: 1; 
+                      text-align: center; 
+                      background: none; 
+                      border: none; 
+                      color: #9ca3af; 
+                      font-size: 10px; 
+                      cursor: pointer; 
+                      display: flex; 
+                      flex-direction: column; 
+                      align-items: center; 
+                      gap: 4px; 
+                  }
                   .nav-item.active { color: #d4af37; }
-                  .nav-icon { font-size: 18px; font-weight: bold; }
+                  .nav-icon { font-size: 20px; }
               </style>
           </head>
           <body>
 
-              <div class="header" id="header-title">Главная</div>
-
               <div class="content-area">
                   
-                  <div id="tab-main" class="tab-content active">
-                      <div class="card">
-                          <h3>12 Главное управление МО РФ</h3>
-                          <p>Добро пожаловать в специализированный мобильный комплекс отбора кандидатов на военную службу по контракту.</p>
-                          <p>Здесь вы можете рассчитать параметры будущего финансового обеспечения, проверить свои нормативы по физической подготовке и подать заявку в кадровый орган.</p>
-                      </div>
-                      <div class="card">
-                          <h3>Преимущества службы</h3>
-                          <p>• Повышенное денежное довольствие со старта службы.</p>
-                          <p>• Служебное жилье или полная компенсация найма.</p>
-                          <p>• Военная ипотека через 3 года службы.</p>
-                      </div>
-                  </div>
-
-                  <div id="tab-dd" class="tab-content">
+                  <div id="tab-dd" class="tab-content active">
                       <div class="card">
                           <h3>Расчёт денежного довольствия</h3>
                           
@@ -171,19 +238,16 @@ jobs:
                                   <option value="7500">Младший сержант</option>
                                   <option value="8000">Сержант</option>
                                   <option value="8500">Старший сержант</option>
-                                  <option value="10000">Прапорщик</option>
-                                  <option value="11500">Лейтенант</option>
                               </select>
                           </div>
 
                           <div class="form-group">
                               <label>Тарифный разряд должности</label>
                               <select id="tariff" onchange="calculateDD()">
-                                  <option value="12000" selected>1 тарифный разряд (Стрелок)</option>
-                                  <option value="13000">2 тарифный разряд (Пулеметчик)</option>
-                                  <option value="14000">3 тарифный разряд (Старший стрелок)</option>
-                                  <option value="15000">4 тарифный разряд (Водитель)</option>
-                                  <option value="16000">5 тарифный разряд (Командир отделения)</option>
+                                  <option value="12000" selected>1 тарифный разряд</option>
+                                  <option value="13000">2 тарифный разряд</option>
+                                  <option value="14000">3 тарифный разряд</option>
+                                  <option value="15000">4 тарифный разряд</option>
                               </select>
                           </div>
 
@@ -193,7 +257,6 @@ jobs:
                                   <option value="0" selected>менее 2 лет (0%)</option>
                                   <option value="0.10">от 2 до 5 лет (10%)</option>
                                   <option value="0.15">от 5 до 10 лет (15%)</option>
-                                  <option value="0.20">от 10 до 15 лет (20%)</option>
                               </select>
                           </div>
 
@@ -203,132 +266,145 @@ jobs:
                                   <option value="0" selected>Нет допуска (0%)</option>
                                   <option value="0.10">3 форма (10%)</option>
                                   <option value="0.20">2 форма (20%)</option>
-                                  <option value="0.25">1 форма (25%)</option>
                               </select>
                           </div>
 
-                          <label>Дополнительные надбавки</label>
-                          
                           <div class="checkbox-card" onclick="toggleDDCheckbox('cl')">
                               <input type="checkbox" id="cl" onchange="calculateDD()" onclick="event.stopPropagation()">
-                              <span>Классная квалификация (+10%)</span>
+                              <span>Классная квалификация</span>
                           </div>
 
                           <div class="checkbox-card" onclick="toggleDDCheckbox('fp_bonus')">
                               <input type="checkbox" id="fp_bonus" onchange="calculateDD()" onclick="event.stopPropagation()">
-                              <span>Высший уровень ФП (+100% от должности)</span>
+                              <span>Высший уровень ФП</span>
                           </div>
 
                           <div class="checkbox-card" onclick="toggleDDCheckbox('risk')">
                               <input type="checkbox" id="risk" onchange="calculateDD()" onclick="event.stopPropagation()">
-                              <span>Особые условия службы (+20%)</span>
-                          </div>
-
-                          <div class="checkbox-card" onclick="toggleDDCheckbox('rc')">
-                              <input type="checkbox" id="rc" onchange="calculateDD()" onclick="event.stopPropagation()">
-                              <span>Районный коэффициент (+15%)</span>
+                              <span>Особые условия службы</span>
                           </div>
 
                           <div class="result-box">
-                              <div class="result-title">Итого на руки (Примерно)</div>
+                              <div class="result-title">Итого к получению (Примерно)</div>
                               <div class="result-value" id="dd-total">0 руб.</div>
-                              <div style="font-size: 11px; color: #6b7280;">С учётом вычета НДФЛ 13%</div>
                           </div>
                       </div>
                   </div>
 
                   <div id="tab-fp" class="tab-content">
                       <div class="card">
-                          <h3>Проверка физподготовки</h3>
+                          <h3>Физическая подготовка</h3>
+                          <div class="form-group">
+                              <label>Подтягивания (количество)</label>
+                              <input type="number" id="fp-pullups" placeholder="0">
+                          </div>
+                          <div class="form-group">
+                              <label>Бег на 100 м (секунды)</label>
+                              <input type="number" step="0.1" id="fp-run100" placeholder="0.0">
+                          </div>
+                          <button class="btn" onclick="calculateFP()">Проверить нормативы</button>
                           
-                          <div class="form-group">
-                              <label>Возрастная категория</label>
-                              <select id="age-cat">
-                                  <option value="1">Категория 1 (до 30 лет)</option>
-                                  <option value="2">Категория 2 (30 - 35 лет)</option>
-                                  <option value="3">Категория 3 (35+ лет)</option>
-                              </select>
-                          </div>
-
-                          <div class="form-group">
-                              <label>Подтягивания (кол-во)</label>
-                              <input type="number" id="fp-pullups" placeholder="0" min="0">
-                          </div>
-
-                          <div class="form-group">
-                              <label>Бег на 100 м (сек)</label>
-                              <input type="number" step="0.1" id="fp-run100" placeholder="0.0" min="0">
-                          </div>
-
-                          <div class="form-group">
-                              <label>Бег на 3 км (мин.сек)</label>
-                              <input type="number" step="0.01" id="fp-run3k" placeholder="12.00" min="0">
-                          </div>
-
-                          <button class="btn" onclick="calculateFP()">Рассчитать баллы</button>
-
-                          <div class="result-box" id="fp-result-box" style="display:none;">
-                              <div class="result-title">Результат проверки</div>
-                              <div class="result-value" id="fp-total-score">0 баллов</div>
-                              <div id="fp-status" style="font-size: 14px; font-weight: bold; margin-top: 5px;"></div>
+                          <div class="result-box" id="fp-res-box" style="display:none;">
+                              <div class="result-value" id="fp-score">0 баллов</div>
+                              <div id="fp-text" style="font-size:13px; margin-top:5px;"></div>
                           </div>
                       </div>
                   </div>
 
-                  <div id="tab-contacts" class="tab-content">
+                  <div id="tab-calendar" class="tab-content">
                       <div class="card">
-                          <h3>Связаться с кадрами</h3>
-                          <p>Вы можете направить результаты расчетов или свои контактные данные напрямую офицеру по тестированию и комплектованию.</p>
-                          <div class="form-group" style="margin-top: 15px;">
-                              <label>Ваше имя</label>
-                              <input type="text" id="cand-name" placeholder="Иван Иванов">
+                          <h3>Календарь и заметки</h3>
+                          <div class="calendar-grid" id="calendar-days"></div>
+                          
+                          <div class="form-group" style="margin-top: 20px;">
+                              <label id="note-label">Выберите день для заметки</label>
+                              <textarea id="note-text" rows="3" placeholder="Введите важную отметку или событие..."></textarea>
+                          </div>
+                          <button class="btn" onclick="saveNote()">Сохранить отметку</button>
+                      </div>
+                  </div>
+
+                  <div id="tab-anketa" class="tab-content">
+                      <div class="card">
+                          <h3>Анкета нового кандидата</h3>
+                          <div class="form-group">
+                              <label>Фамилия, Имя, Отчество</label>
+                              <input type="text" id="c-fio" placeholder="Иванов Иван Иванович">
                           </div>
                           <div class="form-group">
-                              <label>Телефон для связи</label>
-                              <input type="text" id="cand-phone" placeholder="+7 (999) 000-00-00">
+                              <label>Номер телефона</label>
+                              <input type="text" id="c-phone" placeholder="+7 (999) 000-00-00">
                           </div>
-                          <button class="btn" onclick="sendData()">Отправить анкету</button>
+                          <div class="form-group">
+                              <label>Дата рождения</label>
+                              <input type="date" id="c-birthday">
+                          </div>
+                          <div class="form-group">
+                              <label>Регион, где был найден</label>
+                              <input type="text" id="c-region" placeholder="Московская область">
+                          </div>
+                          <button class="btn" onclick="sendAnketa()">Отправить анкету</button>
+                      </div>
+                  </div>
+
+                  <div id="tab-complaint" class="tab-content">
+                      <div class="card">
+                          <h3>Подать жалобу / Обращение</h3>
+                          <div class="form-group">
+                              <label>Суть поданного обращения или претензии</label>
+                              <textarea id="complaint-text" rows="5" placeholder="Опишите подробно возникшую ситуацию или проблему..."></textarea>
+                          </div>
+                          <button class="btn" onclick="sendComplaint()">Направить жалобу</button>
                       </div>
                   </div>
 
               </div>
 
               <nav class="nav-bar">
-                  <button class="nav-item active" onclick="switchTab('main', 'Главная')">
-                      <span class="nav-icon">★</span>
-                      <span>Главная</span>
-                  </button>
-                  <button class="nav-item" onclick="switchTab('dd', 'Расчёт ДД')">
+                  <button class="nav-item active" onclick="switchTab('dd')">
                       <span class="nav-icon">₽</span>
                       <span>Довольствие</span>
                   </button>
-                  <button class="nav-item" onclick="switchTab('fp', 'Нормативы ФП')">
+                  <button class="nav-item" onclick="switchTab('fp')">
                       <span class="nav-icon">⚔</span>
-                      <span>Физподготовка</span>
+                      <span>Физуха</span>
                   </button>
-                  <button class="nav-item" onclick="switchTab('contacts', 'Контакты')">
-                      <span class="nav-icon">✉</span>
-                      <span>Контакты</span>
+                  <button class="nav-item" onclick="switchTab('calendar')">
+                      <span class="nav-icon">📅</span>
+                      <span>Календарь</span>
+                  </button>
+                  <button class="nav-item" onclick="switchTab('anketa')">
+                      <span class="nav-icon">👤</span>
+                      <span>Анкета</span>
+                  </button>
+                  <button class="nav-item" onclick="switchTab('complaint')">
+                      <span class="nav-icon">⚠️</span>
+                      <span>Жалоба</span>
                   </button>
               </nav>
 
               <script>
-                  // Переключение вкладок
-                  function switchTab(tabId, title) {
+                  let selectedDay = null;
+                  const notesData = JSON.parse(localStorage.getItem('glavk_notes') || '{}');
+
+                  function switchTab(tabId) {
                       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                       document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
                       
                       document.getElementById('tab-' + tabId).classList.add('active');
-                      document.getElementById('header-title').innerText = title;
                       
                       const event = window.event;
                       if(event) {
-                          let btn = event.currentTarget;
-                          if(btn) btn.classList.add('active');
+                          event.currentTarget.classList.add('active');
+                      } else {
+                          // Поиск кнопки при инициализации
+                          document.querySelectorAll('.nav-item').forEach(btn => {
+                              if(btn.getAttribute('onclick').includes(tabId)) btn.classList.add('active');
+                          });
                       }
+                      if(tabId === 'calendar') buildCalendar();
                   }
 
-                  // Функции калькулятора ДД
                   function toggleDDCheckbox(id) {
                       const cb = document.getElementById(id);
                       cb.checked = !cb.checked;
@@ -341,8 +417,6 @@ jobs:
                       const base = okladZvanie + okladDolzhnost;
                       
                       let allowances = 0;
-                      allowments = 0;
-                      
                       allowances += base * parseFloat(document.getElementById('experience').value);
                       allowances += okladDolzhnost * parseFloat(document.getElementById('secrecy').value);
                       
@@ -350,51 +424,75 @@ jobs:
                       if(document.getElementById('fp_bonus').checked) allowances += okladDolzhnost * 1.00;
                       if(document.getElementById('risk').checked) allowances += okladDolzhnost * 0.20;
                       
-                      let total = base + allowances;
-                      if(document.getElementById('rc').checked) total = total * 1.15;
-                      
-                      const cleanTotal = Math.round(total * 0.87);
+                      const cleanTotal = Math.round((base + allowances) * 0.87);
                       document.getElementById('dd-total').innerText = cleanTotal.toLocaleString('ru-RU') + " руб.";
                   }
 
-                  // Функции калькулятора ФП
                   function calculateFP() {
                       const pullups = parseInt(document.getElementById('fp-pullups').value) || 0;
-                      let score = pullups * 5; // Условный упрощенный расчет баллов
-                      
-                      document.getElementById('fp-result-box').style.display = "block";
-                      document.getElementById('fp-total-score').innerText = score + " баллов";
-                      
-                      const status = document.getElementById('fp-status');
-                      if(score >= 75) {
-                          status.innerText = "Высший уровень выполнения нормативов!";
-                          status.style.color = "#4ade80";
-                      } else if(score >= 50) {
-                          status.innerText = "Норматив выполнен успешно.";
-                          status.style.color = "#fbbf24";
-                      } else {
-                          status.innerText = "Неудовлетворительно. Требуется подготовка.";
-                          status.style.color = "#ef4444";
+                      const score = pullups * 6;
+                      document.getElementById('fp-res-box').style.display = "block";
+                      document.getElementById('fp-score').innerText = score + " баллов";
+                      document.getElementById('fp-text').innerText = score >= 60 ? "Уровень подготовленности: Высокий" : "Требуется подтянуть результаты";
+                  }
+
+                  function buildCalendar() {
+                      const grid = document.getElementById('calendar-days');
+                      grid.innerHTML = '';
+                      for(let i = 1; i <= 30; i++) {
+                          const day = document.createElement('div');
+                          day.className = 'calendar-day';
+                          if(notesData[i]) day.className += ' has-note';
+                          if(selectedDay === i) day.className += ' active';
+                          day.innerText = i;
+                          day.onclick = () => selectDay(i);
+                          grid.appendChild(day);
                       }
                   }
 
-                  // Отправка данных анкеты
-                  function sendData() {
-                      const name = document.getElementById('cand-name').value || "Не указано";
-                      const phone = document.getElementById('cand-phone').value || "Не указано";
-                      const dd = document.getElementById('dd-total').innerText;
-                      
-                      const subject = "Новая анкета кандидата: " + name;
-                      const body = "Имя: " + name + "\nТелефон: " + phone + "\nРассчитанное ДД на минимальных настройках: " + dd;
-                      
-                      if (typeof AndroidBridge !== 'undefined') {
-                          AndroidBridge.sendEmail(subject, body);
+                  function selectDay(dayNum) {
+                      selectedDay = dayNum;
+                      document.getElementById('note-label').innerText = "Заметка на " + dayNum + " число:";
+                      document.getElementById('note-text').value = notesData[dayNum] || '';
+                      buildCalendar();
+                  }
+
+                  function saveNote() {
+                      if(!selectedDay) { alert("Сначала выберите день на сетке!"); return; }
+                      const txt = document.getElementById('note-text').value;
+                      if(txt.trim()) {
+                          notesData[selectedDay] = txt;
                       } else {
-                          alert("Данные отправлены:\n" + body);
+                          delete notesData[selectedDay];
+                      }
+                      localStorage.setItem('glavk_notes', JSON.stringify(notesData));
+                      buildCalendar();
+                      if(typeof AndroidBridge !== 'undefined') AndroidBridge.showSystemToast("Отметка сохранена");
+                  }
+
+                  function sendAnketa() {
+                      const fio = document.getElementById('c-fio').value;
+                      const phone = document.getElementById('c-phone').value;
+                      const bday = document.getElementById('c-birthday').value;
+                      const region = document.getElementById('c-region').value;
+                      
+                      const body = `Новый кандидат:\nФИО: ${fio}\nТелефон: ${phone}\nДата рождения: ${bday}\nРегион обнаружения: ${region}`;
+                      if(typeof AndroidBridge !== 'undefined') {
+                          AndroidBridge.sendEmail("Регистрация кандидата (" + fio + ")", body);
+                      } else {
+                          alert(body);
                       }
                   }
 
-                  // Первичный автоматический расчёт базового ДД на минималках при открытии
+                  function sendComplaint() {
+                      const text = document.getElementById('complaint-text').value;
+                      if(typeof AndroidBridge !== 'undefined') {
+                          AndroidBridge.sendEmail("Подача официальной жалобы", text);
+                      } else {
+                          alert("Жалоба направлена:\n" + text);
+                      }
+                  }
+
                   calculateDD();
               </script>
           </body>
@@ -561,7 +659,6 @@ jobs:
           }
           EOF
 
-      # Генерация официального криптографического Keystore для устранения ошибок подписи пакета
       - name: Generate Production Signing Keystore
         run: |
           keytool -genkey -v -keystore release.keystore -alias glavk -keyalg RSA -keysize 2048 -validity 10000 -storepass glavk123 -keypass glavk123 -dname "CN=12Glavk, O=Glavk, C=RU"
