@@ -88,11 +88,11 @@
             overflow-x: auto;
             padding-bottom: 4px;
             margin-bottom: 16px;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
         
         .tab-bar::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
         }
 
         .tab-btn {
@@ -205,16 +205,7 @@
         <button class="theme-btn" onclick="toggleTheme()">Смена темы</button>
     </div>
 
-    <div id="auth-screen" class="glass-card">
-        <h2>Авторизация профиля</h2>
-        <div class="input-group">
-            <label>Личный номер / Логин</label>
-            <input type="text" id="login" class="input-control" placeholder="Идентификатор">
-        </div>
-        <button class="btn" onclick="login()">Войти</button>
-    </div>
-
-    <div id="main-content" class="hidden">
+    <div id="main-content">
 
         <div class="tab-bar">
             <button class="tab-btn active" onclick="switchTab('tab-dd', this)">Калькулятор ДД</button>
@@ -230,13 +221,13 @@
             <div class="input-group">
                 <label>Воинское звание</label>
                 <select id="dd-zv" class="input-control">
-                    <option value="6420">Рядовой / Матрос</option>
+                    <option value="6420" selected>Рядовой / Матрос</option>
                     <option value="6960">Ефрейтор / Старший матрос</option>
                     <option value="7490">Младший сержант / Старшина 2 статьи</option>
                     <option value="8030">Сержант / Старшина 1 статьи</option>
                     <option value="8560">Старший сержант / Главный старшина</option>
                     <option value="9100">Старшина / Главный корабельный старшина</option>
-                    <option value="12450" selected>Прапорщик / Мичман</option>
+                    <option value="12450">Прапорщик / Мичман</option>
                     <option value="13530">Старший прапорщик / Старший мичман</option>
                     <option value="14070">Младший лейтенант</option>
                     <option value="14610">Лейтенант</option>
@@ -388,25 +379,14 @@
             document.documentElement.setAttribute('data-theme', newTheme);
         }
 
-        function login() {
-            const user = document.getElementById('login').value;
-            if(user.trim() !== "") {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('main-content').classList.remove('hidden');
-            }
-        }
-
         // Логика переключения табов
         function switchTab(tabId, element) {
-            // Скрываем все вкладки
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.add('hidden'));
             
-            // Убираем активный класс у кнопок
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Показываем целевую вкладку и активируем кнопку
             document.getElementById(tabId).classList.remove('hidden');
             element.classList.add('active');
         }
@@ -509,4 +489,3 @@
     </script>
 </body>
 </html>
- 
