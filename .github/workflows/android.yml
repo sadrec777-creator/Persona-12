@@ -24,51 +24,69 @@ jobs:
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/mipmap
           
-          # Скрипт генерации премиальной тактической иконки 12 Главка
+          # Скрипт генерации тактической иконки: Золотой Двуглавый Орел на фоне цифры 12
           cat << 'EOF' > generate_icon.py
           from PIL import Image, ImageDraw
 
-          # Создаем холст 512x512
-          img = Image.new('RGBA', (512, 512), '#050b14')
+          # Создаем холст 512x512 (глубокий тактический фон)
+          img = Image.new('RGBA', (512, 512), '#030712')
           draw = ImageDraw.Draw(img)
 
-          # Внешние защитные тактические кольца
-          draw.ellipse([15, 15, 497, 497], outline='#38bdf8', width=4)
-          draw.ellipse([25, 25, 487, 487], outline='#d4af37', width=6)
+          # 1. ЗАДНИЙ ПЛАН: Массивная цифра "12" (темный контрастный цвет)
+          bg_digit = '#111827'
+          # Цифра 1
+          draw.rectangle([110, 100, 150, 412], fill=bg_digit)
+          draw.polygon([(70, 140), (110, 100), (110, 150)], fill=bg_digit)
+          # Цифра 2
+          draw.rectangle([210, 100, 390, 140], fill=bg_digit)
+          draw.rectangle([350, 140, 390, 260], fill=bg_digit)
+          draw.rectangle([210, 260, 390, 300], fill=bg_digit)
+          draw.rectangle([210, 300, 250, 380], fill=bg_digit)
+          draw.rectangle([210, 372, 390, 412], fill=bg_digit)
 
-          # Отрисовка геометрии крыльев (стилизация под имперского орла)
+          # Внешнее золотое защитное кольцо
           gold = '#d4af37'
-          # Левое крыло
-          draw.polygon([(190, 160), (80, 130), (110, 200)], fill=gold)
-          draw.polygon([(190, 210), (60, 190), (95, 260)], fill=gold)
-          draw.polygon([(190, 260), (70, 260), (120, 320)], fill=gold)
-          # Правое крыло (зеркальное отражение)
-          draw.polygon([(322, 160), (432, 130), (402, 200)], fill=gold)
-          draw.polygon([(322, 210), (452, 190), (417, 260)], fill=gold)
-          draw.polygon([(322, 260), (442, 260), (392, 320)], fill=gold)
+          draw.ellipse([20, 20, 492, 492], outline=gold, width=4)
 
-          # Центральный боевой щит
-          draw.polygon([(185, 180), (327, 180), (327, 340), (256, 410), (185, 340)], fill='#081125', outline='#38bdf8', width=6)
+          # 2. ПЕРЕДНИЙ ПЛАН: Золотистый Двуглавый Орел
+          # Центральный боевой щит на груди
+          draw.polygon([(220, 240), (292, 240), (292, 340), (256, 380), (220, 340)], fill='#0f172a', outline=gold, width=4)
 
-          # Отрисовка тактической цифры "1" (Трафаретный армейский блок)
-          draw.rectangle([210, 220, 228, 315], fill='#ffffff')
-          draw.polygon([(192, 240), (210, 220), (210, 240)], fill='#ffffff')
-          draw.rectangle([200, 305, 238, 315], fill='#ffffff')
+          # Левое крыло (мощные перья)
+          draw.polygon([(220, 220), (90, 140), (130, 260)], fill=gold)
+          draw.polygon([(220, 250), (70, 220), (110, 320)], fill=gold)
+          draw.polygon([(220, 280), (80, 300), (140, 370)], fill=gold)
 
-          # Отрисовка тактической цифры "2" (Технологичные сегменты)
-          draw.rectangle([255, 220, 295, 235], fill='#ffffff')
-          draw.rectangle([280, 235, 295, 260], fill='#ffffff')
-          draw.rectangle([255, 260, 295, 275], fill='#ffffff')
-          draw.rectangle([255, 275, 270, 300], fill='#ffffff')
-          draw.rectangle([255, 300, 295, 315], fill='#ffffff')
+          # Правое крыло (зеркальное отображение)
+          draw.polygon([(292, 220), (422, 140), (382, 260)], fill=gold)
+          draw.polygon([(292, 250), (442, 220), (402, 320)], fill=gold)
+          draw.polygon([(292, 280), (432, 300), (372, 370)], fill=gold)
+
+          # Левая голова и шея
+          draw.polygon([(225, 220), (210, 160), (240, 160)], fill=gold)
+          draw.ellipse([205, 140, 235, 170], fill=gold)
+          draw.polygon([(210, 150), (185, 155), (210, 160)], fill=gold) # Клюв
+
+          # Правая голова и шея
+          draw.polygon([(287, 220), (272, 160), (302, 160)], fill=gold)
+          draw.ellipse([277, 140, 307, 170], fill=gold)
+          draw.polygon([(302, 150), (327, 155), (302, 160)], fill=gold) # Клюв
+
+          # Имперская корона по центру командных высот
+          draw.polygon([(240, 130), (256, 95), (272, 130), (256, 115)], fill=gold)
+
+          # Хвостовое оперение
+          draw.polygon([(240, 380), (256, 440), (272, 380)], fill=gold)
+          draw.polygon([(225, 360), (235, 430), (250, 380)], fill=gold)
+          draw.polygon([(287, 360), (277, 430), (262, 380)], fill=gold)
 
           img.save('app/src/main/res/mipmap/ic_launcher.png')
-          print("=== Иконка успешно сгенерирована ===")
+          print("=== Новый боевой логотип сгенерирован успешно ===")
           EOF
           
           python3 generate_icon.py
 
-          # Копируем твой прокачанный интерфейс с калькуляторами
+          # Копируем твой интерфейс
           cp index.html app/src/main/assets/index.html
           
           # Настройки проекта
@@ -88,7 +106,7 @@ jobs:
           }
           EOF
           
-          # Билд-файл самого приложения
+          # Билд-файл приложения с конфигурацией релизной цифровой подписи
           cat << 'EOF' > app/build.gradle
           apply plugin: 'com.android.application'
           android {
@@ -100,6 +118,20 @@ jobs:
                   targetSdk 34
                   versionCode 1
                   versionName "1.0"
+              }
+              signingConfigs {
+                  release {
+                      storeFile file("../release.keystore")
+                      storePassword "glavk123"
+                      keyAlias "glavk"
+                      keyPassword "glavk123"
+                  }
+              }
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                      signingConfig signingConfigs.release
+                  }
               }
           }
           EOF
@@ -120,7 +152,7 @@ jobs:
           </manifest>
           EOF
           
-          # Нативный Java-код с поддержкой отправки писем через Интенты Android
+          # Нативный Java-код
           cat << 'EOF' > app/src/main/java/com/glavk/app/MainActivity.java
           package com.glavk.app;
           import android.app.Activity;
@@ -186,14 +218,19 @@ jobs:
           }
           EOF
 
-      - name: Build Application with Gradle
+      # Генерация официального криптографического Keystore для устранения ошибок подписи пакета
+      - name: Generate Production Signing Keystore
+        run: |
+          keytool -genkey -v -keystore release.keystore -alias glavk -keyalg RSA -keysize 2048 -validity 10000 -storepass glavk123 -keypass glavk123 -dname "CN=12Glavk, O=Glavk, C=RU"
+
+      - name: Build Certified Release Application with Gradle
         run: |
           gradle wrapper --gradle-version 8.2
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
 
-      - name: Upload Finished APK
+      - name: Upload Finished Certified APK
         uses: actions/upload-artifact@v4
         with:
-          name: GlavkApp-Finished
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: GlavkApp-Signed-Release
+          path: app/build/outputs/apk/release/app-release.apk
