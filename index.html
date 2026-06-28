@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель Управления 12 ГУ МО — Glassmorphism</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Стилизация стеклянных элементов */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen font-sans antialiased bg-slate-950 relative overflow-x-hidden">
+
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-500/10 blur-[120px]"></div>
+        <div class="absolute bottom-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/15 blur-[150px]"></div>
+        <div class="absolute top-[40%] right-[20%] w-[35%] h-[35%] rounded-full bg-indigo-500/10 blur-[130px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <header class="glass-panel sticky top-0 z-50 border-b border-cyan-500/10">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 p-2 rounded-xl font-black tracking-wider text-sm shadow-[0_0_20px_rgba(6,182,212,0.4)]">12 ГУ</div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-cyan-400">Служебный Монитор</h1>
+                        <span class="text-[10px] font-mono text-cyan-400 tracking-widest uppercase">Liquid Glass Edition</span>
+                    </div>
+                </div>
+                <nav class="flex space-x-1 bg-slate-950/60 p-1 rounded-xl border border-white/5 backdrop-blur-md">
+                    <button onclick="switchTab('calc')" id="btn-calc" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-all duration-300">Калькулятор ДД</button>
+                    <button onclick="switchTab('candidates')" id="btn-candidates" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition-all duration-300">Кандидаты</button>
+                    <button onclick="switchTab('feedback')" id="btn-feedback" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition-all duration-300">Жалобы</button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full">
+            
+            <section id="tab-calc" class="tab-content block">
+                <div class="glass-panel rounded-2xl p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-2 flex items-center gap-2 text-cyan-400 font-mono">
+                        <span>📊</span> ТАРИФНЫЙ МОНИТОР (12 ГУ)
+                    </h2>
+                    <p class="text-slate-400 text-sm mb-8">Специализированный расчет базового ДД и надбавок спец-режима.</p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-cyan-500 mb-2 font-mono">Воинское звание</label>
+                                <select id="rank" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-cyan-500 transition-colors text-slate-200" onchange="calculateSalary()">
+                                    <option value="6000">Рядовой / Матрос (6000 руб.)</option>
+                                    <option value="7500">Сержант / Старшина 2 статьи (7500 руб.)</option>
+                                    <option value="8500">Прапорщик / Мичман (8500 руб.)</option>
+                                    <option value="11000" selected>Лейтенант (11000 руб.)</option>
+                                    <option value="12000">Капитан (12000 руб.)</option>
+                                    <option value="13000">Майор (13000 руб.)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-cyan-500 mb-2 font-mono">Тарифный разряд</label>
+                                <select id="tariff" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-cyan-500 transition-colors text-slate-200" onchange="calculateSalary()">
+                                    <option value="12000">1-4 тарифный (Солдатские должности) ~12000 руб.</option>
+                                    <option value="16500">5-9 тарифный (Сержантские должности) ~16500 руб.</option>
+                                    <option value="22500" selected>10-14 тарифный (Взвод / Рота / Управление) ~22500 руб.</option>
+                                    <option value="28000">15-20 тарифный (Управление батальона) ~28000 руб.</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-cyan-500 mb-2 font-mono">Выслуга лет</label>
+                                <select id="experience" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-cyan-500 transition-colors text-slate-200" onchange="calculateSalary()">
+                                    <option value="0.10">от 2 до 5 лет (+10%)</option>
+                                    <option value="0.15" selected>от 5 до 10 лет (+15%)</option>
+                                    <option value="0.20">от 10 до 15 лет (+20%)</option>
+                                    <option value="0.25">от 15 до 20 лет (+25%)</option>
+                                    <option value="0.30">свыше 20 лет (+30%)</option>
+                                </select>
+                            </div>
+
+                            <div class="pt-2 space-y-3">
+                                <label class="flex items-center space-x-3 glass-card p-3.5 rounded-xl cursor-pointer hover:border-cyan-500/30 transition-all">
+                                    <input type="checkbox" id="ous" checked class="w-4 h-4 rounded text-cyan-500 bg-slate-950 border-white/10 focus:ring-cyan-500" onchange="calculateSalary()">
+                                    <span class="text-sm select-none text-slate-300">Надбавка за ОУС (Спец-режим ГУ) <span class="text-cyan-400 font-mono">+50%</span></span>
+                                </label>
+
+                                <label class="flex items-center space-x-3 glass-card p-3.5 rounded-xl cursor-pointer hover:border-cyan-500/30 transition-all">
+                                    <input type="checkbox" id="secret" checked class="w-4 h-4 rounded text-cyan-500 bg-slate-950 border-white/10 focus:ring-cyan-500" onchange="calculateSalary()">
+                                    <span class="text-sm select-none text-slate-300">Работа с гостайной <span class="text-cyan-400 font-mono">+20%</span></span>
+                                </label>
+
+                                <label class="flex items-center space-x-3 glass-card p-3.5 rounded-xl cursor-pointer hover:border-cyan-500/30 transition-all">
+                                    <input type="checkbox" id="sport" class="w-4 h-4 rounded text-cyan-500 bg-slate-950 border-white/10 focus:ring-cyan-500" onchange="calculateSalary()">
+                                    <span class="text-sm select-none text-slate-300">Высший уровень ФП (НФП) <span class="text-cyan-400 font-mono">+70%</span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950/60 rounded-2xl p-6 border border-cyan-500/20 flex flex-col justify-between shadow-[inset_0_0_20px_rgba(6,182,212,0.1)]">
+                            <div>
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-cyan-400 font-mono mb-4">Детализация расчета</h3>
+                                <div class="space-y-3 font-mono text-sm">
+                                    <div class="flex justify-between border-b border-white/5 pb-2">
+                                        <span class="text-slate-400">По званию:</span>
+                                        <span id="res-rank" class="text-slate-200">0 руб.</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/5 pb-2">
+                                        <span class="text-slate-400">По должности:</span>
+                                        <span id="res-tariff" class="text-slate-200">0 руб.</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/5 pb-2">
+                                        <span class="text-slate-400">Выслуга лет:</span>
+                                        <span id="res-exp" class="text-cyan-400">0 руб.</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/5 pb-2">
+                                        <span class="text-slate-400">Спец-режим (ОУС):</span>
+                                        <span id="res-ous" class="text-cyan-400">0 руб.</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/5 pb-2">
+                                        <span class="text-slate-400">Гостайна:</span>
+                                        <span id="res-secret" class="text-cyan-400">0 руб.</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/5 pb-2">
+                                        <span class="text-slate-400">Высший балл ФП:</span>
+                                        <span id="res-sport" class="text-cyan-400">0 руб.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-white/10">
+                                <div class="text-xs uppercase text-cyan-500 font-mono mb-1 font-semibold tracking-wider">Расчетное довольствие (Грязными):</div>
+                                <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 font-mono tracking-tight drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]" id="res-total">0 руб.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-candidates" class="tab-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1 glass-panel rounded-2xl p-6 h-fit">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-cyan-400 font-mono">
+                            <span>👤</span> РЕГИСТРАЦИЯ КАНДИДАТА
+                        </h2>
+                        <form id="candidate-form" onsubmit="addCandidate(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">ФИО</label>
+                                <input type="text" id="c-name" required placeholder="Петров Петр Петрович" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500 text-slate-200">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">Телефон</label>
+                                    <input type="text" id="c-phone" required placeholder="+7 (999) 000-00-00" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500 text-slate-200">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">ВВК Годность</label>
+                                    <select id="c-health" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500 text-slate-200">
+                                        <option value="А">А — Годен</option>
+                                        <option value="Б">Б — ОГР. Годен</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">Регион работы группы</label>
+                                <select id="c-region" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500 text-slate-200">
+                                    <option value="Тверская область">Тверская область</option>
+                                    <option value="Тульская область">Тульская область</option>
+                                    <option value="Липецкая область">Липецкая область</option>
+                                    <option value="Нижегородская область">Нижегородская область</option>
+                                    <option value="Другой регион">Другой регион</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">ВУС / Проф-данные</label>
+                                <textarea id="c-notes" rows="3" placeholder="Водитель категории С, ВУС-837, категория профотбора — II" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500 text-slate-200"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-slate-950 font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(6,182,212,0.2)]">
+                                Внести в локальную базу
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-200 font-mono uppercase tracking-tight">База данных кандидатов</h2>
+                                <p class="text-cyan-500 text-[11px] font-mono mt-0.5">Локальное защищенное хранилище (Браузер)</p>
+                            </div>
+                            <button onclick="clearCandidates()" class="text-xs bg-red-950/40 hover:bg-red-900/60 text-red-400 px-4 py-2 rounded-xl border border-red-800/40 transition-all font-mono">
+                                Сбросить базу
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto no-scrollbar">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="border-b border-white/10 text-slate-400 text-xs uppercase tracking-wider font-mono">
+                                        <th class="pb-3">Данные Личности</th>
+                                        <th class="pb-3">Региональный узел</th>
+                                        <th class="pb-3 text-center">ВВК</th>
+                                        <th class="pb-3">Спецификация</th>
+                                        <th class="pb-3 text-right">Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="candidates-list" class="divide-y divide-white/5">
+                                    </tbody>
+                            </table>
+                            <div id="empty-state" class="text-center py-16 text-slate-500 font-mono text-xs hidden">
+                                [ Сводные записи отсутствуют. База данных пуста ]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-feedback" class="tab-content hidden">
+                <div class="max-w-xl mx-auto glass-panel rounded-2xl p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-2 flex items-center gap-2 text-red-400 font-mono">
+                        <span>⚠️</span> КАНАЛ СВЯЗИ И ПРАВОВОЙ ЗАЩИТЫ
+                    </h2>
+                    <p class="text-slate-400 text-xs mb-6">Автоматизированное формирование протестов и рапортов по фактам неправомерных действий должностных лиц.</p>
+                    
+                    <form onsubmit="sendComplaint(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">Категория инцидента</label>
+                            <select id="f-subject" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-slate-200">
+                                <option value="Нарушение регламента служебного времени">Нарушение регламента служебного времени (Переработки)</option>
+                                <option value="Некорректное начисление надбавок">Задержка или урезка выплат / ДД</option>
+                                <option value="Проблемы с обеспечением">Вопросы материального/вещевого довольствия</option>
+                                <option value="Иной служебный инцидент">Иные нарушения условий контракта</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1 font-mono">Суть обращения / Обстоятельства</label>
+                            <textarea id="f-message" required rows="6" placeholder="Изложите подробно факты: даты, время, ФИО должностных лиц, пункты уставов или нормативно-правовых актов, которые были проигнорированы..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-slate-200"></textarea>
+                        </div>
+
+                        <div class="bg-slate-950/80 p-4 rounded-xl border border-white/5 text-xs text-slate-400 space-y-1">
+                            <span class="text-slate-500 font-mono">Шлюз назначения (Контроль):</span>
+                            <span class="font-mono text-cyan-400 block font-bold">sadrec777@gmail.com</span>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(225,29,72,0.15)]">
+                            Сформировать рапорт и открыть шлюз
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('block');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
+                btn.classList.add('text-slate-400', 'hover:text-slate-200');
+            });
+            
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200');
+            activeBtn.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
+        }
+
+        function calculateSalary() {
+            const rankSalary = parseInt(document.getElementById('rank').value);
+            const tariffSalary = parseInt(document.getElementById('tariff').value);
+            const expPercent = parseFloat(document.getElementById('experience').value);
+            
+            const isOus = document.getElementById('ous').checked;
+            const isSecret = document.getElementById('secret').checked;
+            const isSport = document.getElementById('sport').checked;
+
+            const baseSalary = rankSalary + tariffSalary;
+            
+            const expBonus = Math.round(baseSalary * expPercent);
+            const ousBonus = isOus ? Math.round(tariffSalary * 0.50) : 0;
+            const secretBonus = isSecret ? Math.round(tariffSalary * 0.20) : 0;
+            const sportBonus = isSport ? Math.round(tariffSalary * 0.70) : 0;
+
+            const total = baseSalary + expBonus + ousBonus + secretBonus + sportBonus;
+
+            document.getElementById('res-rank').innerText = `${rankSalary.toLocaleString()} руб.`;
+            document.getElementById('res-tariff').innerText = `${tariffSalary.toLocaleString()} руб.`;
+            document.getElementById('res-exp').innerText = `+${expBonus.toLocaleString()} руб.`;
+            document.getElementById('res-ous').innerText = `+${ousBonus.toLocaleString()} руб.`;
+            document.getElementById('res-secret').innerText = `+${secretBonus.toLocaleString()} руб.`;
+            document.getElementById('res-sport').innerText = `+${sportBonus.toLocaleString()} руб.`;
+            document.getElementById('res-total').innerText = `${total.toLocaleString()} руб.`;
+        }
+
+        let candidates = JSON.parse(localStorage.getItem('candidates_12gu')) || [];
+
+        function renderCandidates() {
+            const container = document.getElementById('candidates-list');
+            const emptyState = document.getElementById('empty-state');
+            container.innerHTML = '';
+
+            if (candidates.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            candidates.forEach((cand, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 pr-2">
+                        <div class="font-semibold text-slate-200">${cand.name}</div>
+                        <div class="text-xs text-slate-400 font-mono mt-0.5">${cand.phone}</div>
+                    </td>
+                    <td class="py-3 text-xs text-slate-300">${cand.region}</td>
+                    <td class="py-3 text-center">
+                        <span class="px-2 py-0.5 rounded text-xs font-bold ${cand.health === 'А' ? 'bg-cyan-950 text-cyan-400 border border-cyan-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">${cand.health}</span>
+                    </td>
+                    <td class="py-3 text-xs text-slate-400 max-w-[180px] truncate" title="${cand.notes}">${cand.notes || '—'}</td>
+                    <td class="py-3 text-right">
+                        <button onclick="deleteCandidate(${index})" class="text-slate-500 hover:text-rose-400 transition-colors text-base p-1">❌</button>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        function addCandidate(e) {
+            e.preventDefault();
+            const newCand = {
+                name: document.getElementById('c-name').value,
+                phone: document.getElementById('c-phone').value,
+                health: document.getElementById('c-health').value,
+                region: document.getElementById('c-region').value,
+                notes: document.getElementById('c-notes').value
+            };
+
+            candidates.push(newCand);
+            localStorage.setItem('candidates_12gu', JSON.stringify(candidates));
+            document.getElementById('candidate-form').reset();
+            renderCandidates();
+        }
+
+        function deleteCandidate(index) {
+            candidates.splice(index, 1);
+            localStorage.setItem('candidates_12gu', JSON.stringify(candidates));
+            renderCandidates();
+        }
+
+        function clearCandidates() {
+            if(confirm("Вы уверены, что хотите полностью очистить список кандидатов?")) {
+                candidates = [];
+                localStorage.removeItem('candidates_12gu');
+                renderCandidates();
+            }
+        }
+
+        function sendComplaint(e) {
+            e.preventDefault();
+            const targetMail = "sadrec777@gmail.com";
+            const subject = document.getElementById('f-subject').value;
+            const message = document.getElementById('f-message').value;
+
+            const mailtoUrl = `mailto:${targetMail}?subject=${encodeURIComponent('12 ГУ МО | Обращение: ' + subject)}&body=${encodeURIComponent(message)}`;
+            window.location.href = mailtoUrl;
+        }
+
+        window.onload = function() {
+            calculateSalary();
+            renderCandidates();
+        };
+    </script>
+</body>
+</html>
