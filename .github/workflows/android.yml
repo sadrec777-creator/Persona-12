@@ -6,737 +6,104 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-          
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup Python and Pillow
+      - name: Build Full Project
         run: |
-          pip install Pillow
-
-      - name: Auto-Generate Android Project Structure
-        run: |
-          echo "=== Создание структуры и генерация эмблемы ==="
-          mkdir -p app/src/main/java/com/glavk/app
-          mkdir -p app/src/main/assets
-          mkdir -p app/src/main/res/mipmap
+          mkdir -p app/src/main/java/com/glavk/app app/src/main/assets
           
-          # Скрипт генерации новой иконки: Величественный Золотой Двуглавый Орел
-          cat << 'EOF' > generate_icon.py
-          from PIL import Image, ImageDraw
-
-          img = Image.new('RGBA', (512, 512), '#020617')
-          draw = ImageDraw.Draw(img)
-
-          gold_light = '#fbbf24'
-          gold_base  = '#d4af37'
-          gold_dark  = '#b45309'
-
-          draw.ellipse([15, 15, 497, 497], outline=gold_dark, width=6)
-          draw.ellipse([22, 22, 490, 490], outline=gold_base, width=3)
-          draw.ellipse([35, 35, 477, 477], outline=gold_light, width=1)
-          
-          # Хвост орла
-          draw.polygon([(230, 390), (256, 460), (282, 390)], fill=gold_base, outline=gold_dark, width=2)
-          draw.polygon([(210, 370), (225, 440), (245, 385)], fill=gold_base, outline=gold_dark, width=2)
-          draw.polygon([(302, 370), (287, 440), (267, 385)], fill=gold_base, outline=gold_dark, width=2)
-
-          # Крылья
-          draw.polygon([(220, 200), (60, 110), (120, 240)], fill=gold_base, outline=gold_dark, width=2)
-          draw.polygon([(220, 230), (40, 180), (100, 300)], fill=gold_light, outline=gold_dark, width=2)
-          draw.polygon([(220, 260), (50, 260), (120, 350)], fill=gold_base, outline=gold_dark, width=2)
-          draw.polygon([(220, 290), (80, 330), (150, 390)], fill=gold_dark, outline=gold_base, width=1)
-
-          draw.polygon([(292, 200), (452, 110), (392, 240)], fill=gold_base, outline=gold_dark, width=2)
-          draw.polygon([(292, 230), (472, 180), (412, 300)], fill=gold_light, outline=gold_dark, width=2)
-          draw.polygon([(292, 260), (462, 260), (392, 350)], fill=gold_base, outline=gold_dark, width=2)
-          draw.polygon([(292, 290), (432, 330), (362, 390)], fill=gold_dark, outline=gold_base, width=1)
-
-          # Лапы
-          draw.line([(180, 340), (210, 370)], fill=gold_base, width=8)
-          draw.ellipse([165, 330, 195, 360], fill=gold_light, outline=gold_dark, width=2)
-          draw.line([(332, 340), (302, 370)], fill=gold_base, width=8)
-          draw.line([(340, 310), (320, 370)], fill=gold_light, width=6)
-
-          # Головы
-          draw.polygon([(230, 200), (200, 130), (245, 130)], fill=gold_base, outline=gold_dark, width=2)
-          draw.ellipse([195, 110, 230, 145], fill=gold_light, outline=gold_dark, width=2)
-          draw.polygon([(200, 120), (175, 125), (200, 135)], fill=gold_light)
-          
-          draw.polygon([(282, 200), (312, 130), (267, 130)], fill=gold_base, outline=gold_dark, width=2)
-          draw.ellipse([282, 110, 317, 145], fill=gold_light, outline=gold_dark, width=2)
-          draw.polygon([(312, 120), (337, 125), (312, 135)], fill=gold_light)
-
-          # Короны
-          draw.polygon([(200, 115), (207, 95), (215, 115)], fill=gold_light)
-          draw.polygon([(297, 115), (305, 95), (312, 115)], fill=gold_light)
-          draw.polygon([(235, 90), (256, 45), (277, 90), (256, 75)], fill=gold_light, outline=gold_dark, width=2)
-          draw.ellipse([251, 40, 261, 50], fill=gold_light)
-
-          # Центральный щит
-          draw.polygon([(215, 210), (297, 210), (297, 320), (256, 365), (215, 320)], fill='#0f172a', outline=gold_light, width=4)
-          draw.polygon([(225, 220), (287, 220), (287, 310), (256, 350), (225, 310)], outline=gold_dark, width=2)
-
-          img.save('app/src/main/res/mipmap/ic_launcher.png')
-          EOF
-          
-          python3 generate_icon.py
-
-          # ГЕНЕРАЦИЯ ИНТЕРФЕЙСА С ЭФФЕКТОМ ЖИДКОГО СТЕКЛА И НОВЫМИ ВКЛАДКАМИ
+          # --- ПОЛНАЯ КОНФИГУРАЦИЯ ИНТЕРФЕЙСА ---
           cat << 'EOF' > app/src/main/assets/index.html
           <!DOCTYPE html>
           <html lang="ru">
           <head>
               <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-              <title>12 Главк</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <style>
-                  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-                  
-                  /* Глубокий темно-синий тактический фон */
-                  body { 
-                      background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-                      color: #f3f4f6; 
-                      display: flex; 
-                      flex-direction: column; 
-                      height: 100vh; 
-                      overflow: hidden; 
-                  }
-                  
-                  /* Контентная зона */
-                  .content-area { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 85px; }
-                  .tab-content { display: none; max-width: 500px; margin: 0 auto; }
-                  .tab-content.active { display: block; }
-                  
-                  /* Эффект прозрачного жидкого стекла (iOS Glassmorphism) */
-                  .card { 
-                      background: rgba(255, 255, 255, 0.04);
-                      backdrop-filter: blur(20px);
-                      -webkit-backdrop-filter: blur(20px);
-                      border: 1px solid rgba(255, 255, 255, 0.12);
-                      border-radius: 16px; 
-                      padding: 20px; 
-                      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-                      margin-bottom: 16px; 
-                  }
-                  
-                  h3 { color: #d4af37; margin-bottom: 16px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
-                  
-                  .form-group { margin-bottom: 14px; }
-                  label { display: block; margin-bottom: 6px; font-size: 13px; color: #9ca3af; }
-                  
-                  /* Поля ввода в стиле жидкого стекла */
-                  select, input[type="number"], input[type="text"], input[type="date"], textarea { 
-                      width: 100%; 
-                      padding: 12px; 
-                      background: rgba(255, 255, 255, 0.06);
-                      border: 1px solid rgba(255, 255, 255, 0.1);
-                      border-radius: 10px; 
-                      color: #ffffff; 
-                      font-size: 14px; 
-                      outline: none;
-                      transition: all 0.3s ease;
-                  }
-                  select:focus, input:focus, textarea:focus { 
-                      border-color: rgba(212, 175, 55, 0.5);
-                      background: rgba(255, 255, 255, 0.1);
-                      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-                  }
-                  
-                  .checkbox-card { 
-                      background: rgba(255, 255, 255, 0.03);
-                      border: 1px solid rgba(255, 255, 255, 0.08);
-                      border-radius: 10px; 
-                      padding: 12px; 
-                      margin-bottom: 10px; 
-                      display: flex; 
-                      align-items: center; 
-                      cursor: pointer; 
-                  }
-                  .checkbox-card input[type="checkbox"] { width: 18px; height: 18px; margin-right: 12px; accent-color: #d4af37; }
-                  
-                  .result-box { 
-                      margin-top: 20px; 
-                      background: linear-gradient(135deg, rgba(30, 27, 75, 0.4), rgba(17, 24, 39, 0.4));
-                      border: 1px solid rgba(212, 175, 55, 0.4); 
-                      border-radius: 12px; 
-                      padding: 16px; 
-                      text-align: center; 
-                  }
-                  .result-value { font-size: 26px; font-weight: bold; color: #d4af37; margin: 4px 0; }
-                  
-                  .btn { 
-                      display: block; 
-                      width: 100%; 
-                      padding: 14px; 
-                      background: linear-gradient(135deg, #d4af37 0%, #aa841a 100%);
-                      color: #0b0f19; 
-                      border: none; 
-                      border-radius: 10px; 
-                      font-size: 14px; 
-                      font-weight: bold; 
-                      text-transform: uppercase; 
-                      cursor: pointer; 
-                      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-                  }
-                  .btn:active { transform: scale(0.98); }
-                  
-                  /* Стили календаря */
-                  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; text-align: center; }
-                  .calendar-day { padding: 10px 0; background: rgba(255, 255, 255, 0.04); border-radius: 6px; font-size: 13px; cursor: pointer; }
-                  .calendar-day.active { background: #d4af37; color: #0b0f19; font-weight: bold; }
-                  .calendar-day.has-note { border-bottom: 3px solid #60a5fa; }
-                  
-                  /* Панель навигации iOS Glassmorphism в самом низу */
-                  .nav-bar { 
-                      position: fixed; 
-                      bottom: 0; left: 0; right: 0; 
-                      height: 68px; 
-                      background: rgba(17, 24, 37, 0.4);
-                      backdrop-filter: blur(30px);
-                      -webkit-backdrop-filter: blur(30px);
-                      border-top: 1px solid rgba(255, 255, 255, 0.08); 
-                      display: flex; 
-                      justify-content: space-around; 
-                      align-items: center; 
-                      z-index: 100; 
-                      padding-bottom: 8px;
-                  }
-                  .nav-item { 
-                      flex: 1; 
-                      text-align: center; 
-                      background: none; 
-                      border: none; 
-                      color: #9ca3af; 
-                      font-size: 10px; 
-                      cursor: pointer; 
-                      display: flex; 
-                      flex-direction: column; 
-                      align-items: center; 
-                      gap: 4px; 
-                  }
-                  .nav-item.active { color: #d4af37; }
-                  .nav-icon { font-size: 20px; }
+                  body { background: #0f172a; background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%); color: #fff; margin: 0; font-family: 'Segoe UI', sans-serif; }
+                  .tab-content { display: none; padding: 20px; padding-bottom: 120px; }
+                  .active-tab { display: block; }
+                  .card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+                  select, input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(0,0,0,0.3); border: 1px solid #334155; color: #fff; border-radius: 8px; }
+                  .btn { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; border-radius: 8px; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
+                  nav { position: fixed; bottom: 0; width: 100%; height: 80px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #334155; }
+                  .nav-btn { background: none; border: none; color: #94a3b8; font-size: 9px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+                  .nav-btn.active { color: #d4af37; }
               </style>
           </head>
           <body>
-
-              <div class="content-area">
-                  
-                  
-<div id="tab-dd" class="tab-content active-tab">
-    <div class="card" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 25px;">
-        <h3 style="color: #d4af37; margin-bottom: 20px; font-size: 16px; letter-spacing: 1px; text-transform: uppercase;">Калькулятор ДД (2026)</h3>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <select id="rank" class="input-field">
-                <option value="7166">Рядовой (7166 ₽)</option>
-                <option value="7881">Ефрейтор (7881 ₽)</option>
-                <option value="8601">Мл. сержант (8601 ₽)</option>
-                <option value="9315">Сержант (9315 ₽)</option>
-                <option value="11992">Прапорщик (11992 ₽)</option>
-            </select>
-            <select id="tariff" class="input-field">
-                <option value="14331">1 разряд (14331 ₽)</option>
-                <option value="15761">3 разряд (15761 ₽)</option>
-                <option value="17200">5 разряд (17200 ₽)</option>
-                <option value="20000">Пример 7-8 разряд</option>
-            </select>
-        </div>
-
-        <select id="vysluga" class="input-field">
-            <option value="0.1">Выслуга 2-5 лет (10%)</option>
-            <option value="0.2">Выслуга 5-10 лет (20%)</option>
-            <option value="0.3">Выслуга 10-15 лет (30%)</option>
-            <option value="0.4">Выслуга 15-20 лет (40%)</option>
-            <option value="0.5">Выслуга 20-25 лет (50%)</option>
-            <option value="0.7">25+ лет (70%)</option>
-        </select>
-
-        <select id="secret" class="input-field">
-            <option value="0">Без секретности</option>
-            <option value="0.1">Секретно (10%)</option>
-            <option value="0.2">Совершенно секретно (20%)</option>
-            <option value="0.25">Особой важности (25%)</option>
-        </select>
-
-        <div style="display: flex; gap: 10px; margin: 10px 0;">
-            <select id="region" class="input-field">
-                <option value="1.0">Регион (1.0)</option>
-                <option value="1.2">Москва/МО (1.2)</option>
-                <option value="1.15">Крайний Север (1.15)</option>
-                <option value="1.3">Высокогорье / особые (1.3)</option>
-            </select>
-            <div style="flex:1; display:flex; align-items:center; background:rgba(0,0,0,0.3); border-radius:8px; padding:0 10px; border:1px solid #334155;">
-                <input type="checkbox" id="special" checked style="width: auto;">
-                <label for="special" style="font-size: 11px; margin-left: 8px; color: #fff;">Спецслужба / доп. коэф. (1.25)</label>
-            </div>
-        </div>
-
-        <!-- Дополнительные поля для полноты -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-            <select id="class_qual" class="input-field">
-                <option value="0">Классная квалификация (0%)</option>
-                <option value="0.05">3 класс (5%)</option>
-                <option value="0.1">2 класс (10%)</option>
-                <option value="0.2">1 класс (20%)</option>
-                <option value="0.3">Мастер (30%)</option>
-            </select>
-            <select id="physical" class="input-field">
-                <option value="0">Физподготовка (0%)</option>
-                <option value="0.15">Отлично (15%)</option>
-                <option value="0.1">Хорошо (10%)</option>
-            </select>
-        </div>
-
-        <button onclick="calcDD()" style="width: 100%; padding: 15px; border-radius: 12px; border: none; background: #d4af37; color: #000; font-weight: bold; cursor: pointer; margin-top: 15px;">РАССЧИТАТЬ ДД</button>
-
-        <div id="dd-result" style="margin-top: 20px; padding: 20px; border-radius: 15px; background: rgba(0,0,0,0.3); text-align: center; border: 1px solid rgba(212, 175, 55, 0.4);">
-            <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase;">Оклад денежного содержания</div>
-            <div id="base-sum" style="font-size: 18px; color: #fff; margin-top: 5px;">0 ₽</div>
-            
-            <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; margin-top: 15px;">Итого к выплате (с надбавками)</div>
-            <div id="total-sum" style="font-size: 26px; font-weight: bold; color: #d4af37; margin-top: 5px;">0 ₽</div>
-            
-            <div id="breakdown" style="margin-top: 15px; font-size: 12px; text-align: left; color: #9ca3af; line-height: 1.4;"></div>
-        </div>
-    </div>
-</div>
-
-<style>
-    .input-field { 
-        width: 100%; 
-        padding: 12px; 
-        margin: 5px 0; 
-        background: rgba(0,0,0,0.3); 
-        border: 1px solid #334155; 
-        color: #fff; 
-        border-radius: 8px; 
-        box-sizing: border-box; 
-        font-size: 13px; 
-    }
-</style>
-
-<script>
-    function calcDD() {
-        const rank = parseFloat(document.getElementById('rank').value) || 0;
-        const tariff = parseFloat(document.getElementById('tariff').value) || 0;
-        const vysluga = parseFloat(document.getElementById('vysluga').value) || 0;
-        const secret = parseFloat(document.getElementById('secret').value) || 0;
-        const region = parseFloat(document.getElementById('region').value) || 1.0;
-        const isSpecial = document.getElementById('special').checked ? 1.25 : 1.0;
-        const classQual = parseFloat(document.getElementById('class_qual').value) || 0;
-        const physical = parseFloat(document.getElementById('physical').value) || 0;
-
-        const base = rank + tariff;
-        const allowancesRate = vysluga + secret + classQual + physical;
-        const total = Math.round(base * (1 + allowancesRate) * region * isSpecial);
-
-        // Вывод
-        document.getElementById('base-sum').innerText = base.toLocaleString('ru-RU') + " ₽";
-        document.getElementById('total-sum').innerText = total.toLocaleString('ru-RU') + " ₽";
-
-        // Breakdown
-        let breakdownHTML = `
-            <strong>База:</strong> ${base.toLocaleString('ru-RU')} ₽<br>
-            <strong>Надбавки:</strong> \( {(allowancesRate * 100).toFixed(0)}% ( \){vysluga*100}% выслуга, ${secret*100}% секретность и др.)<br>
-            <strong>Регион:</strong> ×${region}<br>
-            <strong>Спецслужба:</strong> ×${isSpecial}
-        `;
-        document.getElementById('breakdown').innerHTML = breakdownHTML;
-    }
-
-    // Авто-расчёт при изменении
-    document.querySelectorAll('select, input[type="checkbox"]').forEach(el => {
-        el.addEventListener('change', calcDD);
-    });
-
-    // Инициализация
-    window.onload = calcDD;
-</script>
-                  <div id="tab-fp" class="tab-content">
-                      <div class="card">
-                          <h3>Физическая подготовка</h3>
-                          <div class="form-group">
-                              <label>Подтягивания (количество)</label>
-                              <input type="number" id="fp-pullups" placeholder="0">
-                          </div>
-                          <div class="form-group">
-                              <label>Бег на 100 м (секунды)</label>
-                              <input type="number" step="0.1" id="fp-run100" placeholder="0.0">
-                          </div>
-                          <button class="btn" onclick="calculateFP()">Проверить нормативы</button>
-                          
-                          <div class="result-box" id="fp-res-box" style="display:none;">
-                              <div class="result-value" id="fp-score">0 баллов</div>
-                              <div id="fp-text" style="font-size:13px; margin-top:5px;"></div>
-                          </div>
+              <div id="tab-dd" class="tab-content active-tab">
+                  <div class="card">
+                      <h3>Денежное довольствие</h3>
+                      <select id="rank">
+                          <option value="6000">Рядовой</option><option value="7500">Ефрейтор</option><option value="8500">Мл. сержант</option><option value="10000">Сержант</option><option value="12000">Ст. сержант</option>
+                          <option value="13000">Старшина</option><option value="15000">Прапорщик</option><option value="16000">Ст. прапорщик</option><option value="18000">Мл. лейтенант</option><option value="20000">Лейтенант</option>
+                          <option value="22000">Ст. лейтенант</option><option value="25000">Капитан</option><option value="30000">Майор</option><option value="35000">Подполковник</option><option value="40000">Полковник</option>
+                      </select>
+                      <select id="tariff">
+                          <option value="10000">1 разряд (10000)</option><option value="12000">2 разряд</option><option value="14000">3 разряд</option><option value="16000">4 разряд</option><option value="18000">5 разряд</option>
+                          <option value="20000">6 разряд</option><option value="22000">7 разряд</option><option value="24000">8 разряд</option><option value="26000">9 разряд</option><option value="28000">10 разряд</option>
+                          <option value="30000">11 разряд</option><option value="32000">12 разряд</option><option value="34000">13 разряд</option><option value="36000">14 разряд</option><option value="38000">15 разряд</option>
+                          <option value="40000">16 разряд</option><option value="42000">17 разряд</option><option value="44000">18 разряд</option><option value="46000">19 разряд</option><option value="50000">20 разряд</option>
+                      </select>
+                      <select id="vysluga"><option value="0.0">Без выслуги</option><option value="0.1">2-5 лет</option><option value="0.2">5-10 лет</option><option value="0.3">10-15 лет</option><option value="0.4">15-20 лет</option><option value="0.7">20+ лет</option></select>
+                      <select id="secret"><option value="0.0">Без секретности</option><option value="0.2">20%</option><option value="0.5">50%</option><option value="0.65">65%</option></select>
+                      <div style="font-size:12px; margin:10px 0;">
+                          <label><input type="checkbox" id="moscow"> Московская надбавка (50%)</label><br>
+                          <label><input type="checkbox" id="spec" checked> Главковская (1.25)</label>
                       </div>
+                      <button class="btn" onclick="calc()">РАССЧИТАТЬ</button>
+                      <div id="dd-res" style="text-align:center; font-size:26px; color:#d4af37; margin-top:15px; font-weight:bold;">0 ₽</div>
                   </div>
-
-                  <div id="tab-calendar" class="tab-content">
-                      <div class="card">
-                          <h3>Календарь и заметки</h3>
-                          <div class="calendar-grid" id="calendar-days"></div>
-                          
-                          <div class="form-group" style="margin-top: 20px;">
-                              <label id="note-label">Выберите день для заметки</label>
-                              <textarea id="note-text" rows="3" placeholder="Введите важную отметку или событие..."></textarea>
-                          </div>
-                          <button class="btn" onclick="saveNote()">Сохранить отметку</button>
-                      </div>
-                  </div>
-
-                  <div id="tab-anketa" class="tab-content">
-                      <div class="card">
-                          <h3>Анкета нового кандидата</h3>
-                          <div class="form-group">
-                              <label>Фамилия, Имя, Отчество</label>
-                              <input type="text" id="c-fio" placeholder="Иванов Иван Иванович">
-                          </div>
-                          <div class="form-group">
-                              <label>Номер телефона</label>
-                              <input type="text" id="c-phone" placeholder="+7 (999) 000-00-00">
-                          </div>
-                          <div class="form-group">
-                              <label>Дата рождения</label>
-                              <input type="date" id="c-birthday">
-                          </div>
-                          <div class="form-group">
-                              <label>Регион, где был найден</label>
-                              <input type="text" id="c-region" placeholder="Московская область">
-                          </div>
-                          <button class="btn" onclick="sendAnketa()">Отправить анкету</button>
-                      </div>
-                  </div>
-
-                  <div id="tab-complaint" class="tab-content">
-                      <div class="card">
-                          <h3>Подать жалобу / Обращение</h3>
-                          <div class="form-group">
-                              <label>Суть поданного обращения или претензии</label>
-                              <textarea id="complaint-text" rows="5" placeholder="Опишите подробно возникшую ситуацию или проблему..."></textarea>
-                          </div>
-                          <button class="btn" onclick="sendComplaint()">Направить жалобу</button>
-                      </div>
-                  </div>
-
               </div>
-
-              <nav class="nav-bar">
-                  <button class="nav-item active" onclick="switchTab('dd')">
-                      <span class="nav-icon">₽</span>
-                      <span>ДД</span>
-                  </button>
-                  <button class="nav-item" onclick="switchTab('fp')">
-                      <span class="nav-icon">⚔</span>
-                      <span>ФП</span>
-                  </button>
-                  <button class="nav-item" onclick="switchTab('calendar')">
-                      <span class="nav-icon">📅</span>
-                      <span>Календарь</span>
-                  </button>
-                  <button class="nav-item" onclick="switchTab('anketa')">
-                      <span class="nav-icon">👤</span>
-                      <span>Кандидат</span>
-                  </button>
-                  <button class="nav-item" onclick="switchTab('complaint')">
-                      <span class="nav-icon">⚠️</span>
-                      <span>Жалоба</span>
-                  </button>
+              <div id="tab-fp" class="tab-content"><div class="card"><h3>ФП: Баллы</h3><input id="p" placeholder="Подтягивания"><input id="r" placeholder="Бег 3км (с)"><button class="btn" onclick="calcFP()">РАСЧЕТ</button><div id="fp-res" style="text-align:center; margin-top:10px; color:#d4af37;">0 баллов</div></div></div>
+              <div id="tab-calendar" class="tab-content"><div class="card"><h3>Календарь/Заметки</h3><textarea id="notes" style="height:150px;"></textarea><button class="btn" onclick="save()">СОХРАНИТЬ</button></div></div>
+              <div id="tab-anketa" class="tab-content"><div class="card"><h3>Анкета</h3><input placeholder="ФИО"><input placeholder="Должность"><input placeholder="Подразделение"><button class="btn">ОТПРАВИТЬ</button></div></div>
+              <div id="tab-complaint" class="tab-content"><div class="card"><h3>Жалоба</h3><textarea style="height:150px;"></textarea><button class="btn">НАПРАВИТЬ</button></div></div>
+              
+              <nav>
+                  <button class="nav-btn active" onclick="go('dd', this)">ДД</button>
+                  <button class="nav-btn" onclick="go('fp', this)">ФП</button>
+                  <button class="nav-btn" onclick="go('calendar', this)">Заметки</button>
+                  <button class="nav-btn" onclick="go('anketa', this)">Анкета</button>
+                  <button class="nav-btn" onclick="go('complaint', this)">Жалоба</button>
               </nav>
-
               <script>
-                  let selectedDay = null;
-                  const notesData = JSON.parse(localStorage.getItem('glavk_notes') || '{}');
-
-                  function switchTab(tabId) {
-                      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-                      
-                      document.getElementById('tab-' + tabId).classList.add('active');
-                      
-                      const event = window.event;
-                      if(event) {
-                          event.currentTarget.classList.add('active');
-                      } else {
-                          // Поиск кнопки при инициализации
-                          document.querySelectorAll('.nav-item').forEach(btn => {
-                              if(btn.getAttribute('onclick').includes(tabId)) btn.classList.add('active');
-                          });
-                      }
-                      if(tabId === 'calendar') buildCalendar();
+                  function go(id, btn){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active-tab')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+id).classList.add('active-tab'); btn.classList.add('active'); }
+                  function calc(){
+                      const base = parseFloat(document.getElementById('rank').value) + parseFloat(document.getElementById('tariff').value);
+                      let total = base * (1 + parseFloat(document.getElementById('vysluga').value) + parseFloat(document.getElementById('secret').value));
+                      if(document.getElementById('moscow').checked) total *= 1.5;
+                      if(document.getElementById('spec').checked) total *= 1.25;
+                      document.getElementById('dd-res').innerText = Math.round(total).toLocaleString() + " ₽";
                   }
-
-                  function toggleDDCheckbox(id) {
-                      const cb = document.getElementById(id);
-                      cb.checked = !cb.checked;
-                      calculateDD();
-                  }
-
-                  function calculateDD() {
-                      const okladZvanie = parseFloat(document.getElementById('rank').value);
-                      const okladDolzhnost = parseFloat(document.getElementById('tariff').value);
-                      const base = okladZvanie + okladDolzhnost;
-                      
-                      let allowances = 0;
-                      allowances += base * parseFloat(document.getElementById('experience').value);
-                      allowances += okladDolzhnost * parseFloat(document.getElementById('secrecy').value);
-                      
-                      if(document.getElementById('cl').checked) allowances += okladDolzhnost * 0.10;
-                      if(document.getElementById('fp_bonus').checked) allowances += okladDolzhnost * 1.00;
-                      if(document.getElementById('risk').checked) allowances += okladDolzhnost * 0.20;
-                      
-                      const cleanTotal = Math.round((base + allowances) * 0.87);
-                      document.getElementById('dd-total').innerText = cleanTotal.toLocaleString('ru-RU') + " руб.";
-                  }
-
-                  function calculateFP() {
-                      const pullups = parseInt(document.getElementById('fp-pullups').value) || 0;
-                      const score = pullups * 6;
-                      document.getElementById('fp-res-box').style.display = "block";
-                      document.getElementById('fp-score').innerText = score + " баллов";
-                      document.getElementById('fp-text').innerText = score >= 60 ? "Уровень подготовленности: Высокий" : "Требуется подтянуть результаты";
-                  }
-
-                  function buildCalendar() {
-                      const grid = document.getElementById('calendar-days');
-                      grid.innerHTML = '';
-                      for(let i = 1; i <= 30; i++) {
-                          const day = document.createElement('div');
-                          day.className = 'calendar-day';
-                          if(notesData[i]) day.className += ' has-note';
-                          if(selectedDay === i) day.className += ' active';
-                          day.innerText = i;
-                          day.onclick = () => selectDay(i);
-                          grid.appendChild(day);
-                      }
-                  }
-
-                  function selectDay(dayNum) {
-                      selectedDay = dayNum;
-                      document.getElementById('note-label').innerText = "Заметка на " + dayNum + " число:";
-                      document.getElementById('note-text').value = notesData[dayNum] || '';
-                      buildCalendar();
-                  }
-
-                  function saveNote() {
-                      if(!selectedDay) { alert("Сначала выберите день на сетке!"); return; }
-                      const txt = document.getElementById('note-text').value;
-                      if(txt.trim()) {
-                          notesData[selectedDay] = txt;
-                      } else {
-                          delete notesData[selectedDay];
-                      }
-                      localStorage.setItem('glavk_notes', JSON.stringify(notesData));
-                      buildCalendar();
-                      if(typeof AndroidBridge !== 'undefined') AndroidBridge.showSystemToast("Отметка сохранена");
-                  }
-
-                  function sendAnketa() {
-                      const fio = document.getElementById('c-fio').value;
-                      const phone = document.getElementById('c-phone').value;
-                      const bday = document.getElementById('c-birthday').value;
-                      const region = document.getElementById('c-region').value;
-                      
-                      const body = `Новый кандидат:\nФИО: ${fio}\nТелефон: ${phone}\nДата рождения: ${bday}\nРегион обнаружения: ${region}`;
-                      if(typeof AndroidBridge !== 'undefined') {
-                          AndroidBridge.sendEmail("Регистрация кандидата (" + fio + ")", body);
-                      } else {
-                          alert(body);
-                      }
-                  }
-
-                  function sendComplaint() {
-                      const text = document.getElementById('complaint-text').value;
-                      if(typeof AndroidBridge !== 'undefined') {
-                          AndroidBridge.sendEmail("Подача официальной жалобы", text);
-                      } else {
-                          alert("Жалоба направлена:\n" + text);
-                      }
-                  }
-
-                  calculateDD();
+                  function calcFP(){ document.getElementById('fp-res').innerText = (parseInt(document.getElementById('p').value)*5 + " баллов"); }
+                  function save(){ localStorage.setItem('n', document.getElementById('notes').value); alert('Сохранено'); }
+                  document.getElementById('notes').value = localStorage.getItem('n') || '';
               </script>
           </body>
           </html>
           EOF
-          
-          # Настройки проекта
-          cat << 'EOF' > settings.gradle
-          rootProject.name = "GlavkApp"
-          include ':app'
-          EOF
-          
-          # Главный билд-файл
-          cat << 'EOF' > build.gradle
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies { classpath 'com.android.tools.build:gradle:8.2.2' }
-          }
-          allprojects {
-              repositories { google(); mavenCentral() }
-          }
-          EOF
-          
-          # Билд-файл приложения
-          cat << 'EOF' > app/build.gradle
-          apply plugin: 'com.android.application'
-          android {
-              compileSdk 34
-              namespace 'com.glavk.app'
-              defaultConfig {
-                  applicationId "com.glavk.app"
-                  minSdk 21
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
-              }
-              signingConfigs {
-                  release {
-                      storeFile file("../release.keystore")
-                      storePassword "glavk123"
-                      keyAlias "glavk"
-                      keyPassword "glavk123"
-                  }
-              }
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                      signingConfig signingConfigs.release
-                  }
-              }
-          }
-          EOF
-          
-          # Манифест приложения с цифровым названием в лаунчере
+
+          # --- БАЗОВЫЕ ФАЙЛЫ ---
           cat << 'EOF' > app/src/main/AndroidManifest.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <uses-permission android:name="android.permission.INTERNET" />
-              <application android:label="12 Главк" android:icon="@mipmap/ic_launcher" android:allowBackup="true" android:supportsRtl="true">
-                  <activity android:name=".MainActivity" android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN" />
-                          <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>
-                  </activity>
-              </application>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.glavk.app">
+              <application android:label="12 Главк" android:allowBackup="true"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter></activity></application>
           </manifest>
           EOF
-          
-          # Нативный Java-код с глубоким перехватом URL-схем mailto:
           cat << 'EOF' > app/src/main/java/com/glavk/app/MainActivity.java
-          package com.glavk.app;
-          import android.app.Activity;
-          import android.content.Context;
-          import android.content.Intent;
-          import android.net.Uri;
-          import android.os.Bundle;
-          import android.view.Window;
-          import android.view.WindowManager;
-          import android.webkit.JavascriptInterface;
-          import android.webkit.WebSettings;
-          import android.webkit.WebView;
-          import android.webkit.WebViewClient;
-          import android.webkit.WebResourceRequest;
-          import android.view.ViewGroup;
-          import android.widget.LinearLayout;
-          import android.widget.Toast;
-          public class MainActivity extends Activity {
-              @Override
-              protected void onCreate(Bundle savedInstanceState) {
-                  super.onCreate(savedInstanceState);
-                  requestWindowFeature(Window.FEATURE_NO_TITLE);
-                  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                  LinearLayout layout = new LinearLayout(this);
-                  layout.setOrientation(LinearLayout.VERTICAL);
-                  layout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                  WebView webView = new WebView(this);
-                  webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                  WebSettings webSettings = webView.getSettings();
-                  webSettings.setJavaScriptEnabled(true);
-                  webSettings.setDomStorageEnabled(true);
-                  webSettings.setAllowFileAccess(true);
-                  webSettings.setAllowContentAccess(true);
-                  webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-                  webView.addJavascriptInterface(new WebAppInterface(this), "AndroidBridge");
-                  
-                  webView.setWebViewClient(new WebViewClient() {
-                      @SuppressWarnings("deprecation")
-                      @Override
-                      public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                          if (url.startsWith("mailto:")) {
-                              handleMailto(url);
-                              return true;
-                          }
-                          return false;
-                      }
-                      @Override
-                      public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                          String url = request.getUrl().toString();
-                          if (url.startsWith("mailto:")) {
-                              handleMailto(url);
-                              return true;
-                          }
-                          return false;
-                      }
-                      private void handleMailto(String url) {
-                          try {
-                              Intent intent = new Intent(Intent.ACTION_SENDTO);
-                              intent.setData(Uri.parse(url));
-                              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                              startActivity(intent);
-                          } catch (Exception e) {
-                              Toast.makeText(MainActivity.this, "Ошибка: нет почтового приложения", Toast.LENGTH_LONG).show();
-                          }
-                      }
-                  });
-                  
-                  webView.loadUrl("file:///android_asset/index.html");
-                  layout.addView(webView);
-                  setContentView(layout);
-              }
-              public class WebAppInterface {
-                  Context mContext;
-                  WebAppInterface(Context c) { mContext = c; }
-                  
-                  @JavascriptInterface
-                  public void showSystemToast(String message) {
-                      Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
-                  }
-                  @JavascriptInterface
-                  public void sendEmail(String subject, String text) {
-                      try {
-                          Intent intent = new Intent(Intent.ACTION_SENDTO);
-                          intent.setData(Uri.parse("mailto:rburov97@yandex.ru"));
-                          intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                          intent.putExtra(Intent.EXTRA_TEXT, text);
-                          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                          mContext.startActivity(intent);
-                      } catch (Exception e) {
-                          Toast.makeText(mContext, "Ошибка: нет почтового приложения", Toast.LENGTH_LONG).show();
-                      }
-                  }
-              }
-          }
+          package com.glavk.app; import android.app.Activity; import android.os.Bundle; import android.webkit.WebView;
+          public class MainActivity extends Activity { @Override protected void onCreate(Bundle b){ super.onCreate(b); WebView wv = new WebView(this); wv.getSettings().setJavaScriptEnabled(true); wv.getSettings().setDomStorageEnabled(true); wv.loadUrl("file:///android_asset/index.html"); setContentView(wv); } }
           EOF
+          echo "rootProject.name = 'GlavkApp'" > settings.gradle; echo "include ':app'" >> settings.gradle
+          echo "plugins { id 'com.android.application' } android { compileSdk 34; defaultConfig { applicationId 'com.glavk.app'; minSdk 21; targetSdk 34 } }" > app/build.gradle
+          gradle wrapper; chmod +x gradlew; ./gradlew assembleDebug
 
-      - name: Generate Production Signing Keystore
-        run: |
-          keytool -genkey -v -keystore release.keystore -alias glavk -keyalg RSA -keysize 2048 -validity 10000 -storepass glavk123 -keypass glavk123 -dname "CN=12Glavk, O=Glavk, C=RU"
-
-      - name: Build Certified Release Application with Gradle
-        run: |
-          gradle wrapper --gradle-version 8.2
-          chmod +x gradlew
-          ./gradlew assembleRelease
-
-      - name: Upload Finished Certified APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: GlavkApp-Signed-Release
-          path: app/build/outputs/apk/release/app-release.apk
+          name: GlavkApp
+          path: app/build/outputs/apk/debug/app-debug.apk
